@@ -1,8 +1,12 @@
-print "haha !"
+### Balbou et Victor
+
+#V: Je fais un peu nawak, on reparlera organisation de code etc...
+
+# chargement packages
+from numpy import *
 
 
-a=2
-b=a+3
-print b
-print "hehe !"
 
+# on charge les données
+
+genfromtxt()
