@@ -3,10 +3,13 @@
 #V: Je fais un peu nawak, on reparlera organisation de code etc...
 
 # chargement packages
-from numpy import *
+import numpy as np
+import pandas as pd
 
+
+dossier="C:/Users/Victor/Documents/programmes/blemais/" 
 
 
 # on charge les données
 
-genfromtxt()
+maize = pd.read_table(dossier+"TrainingDataSet_Maize.txt")
