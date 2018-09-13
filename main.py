@@ -38,6 +38,8 @@ maize[col["Tx_1"]]
 ###  Déficit hydrique
 RUM = 10
 
+
+
 maize[col["RU_1"]]=RUM
 
 for i in range(2,10):
@@ -51,7 +53,7 @@ for i in range(2,10):
     DE = (maize[col[colPR]] - maize[col[colETP]]) < 0
 
 
-  DE<-(maize[,colPR]-maize[,colETP])<0
+
   maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
   maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
   maize[!DE,colETR]<-maize[!DE,colETP]
