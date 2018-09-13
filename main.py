@@ -6,17 +6,22 @@
 import numpy as np
 import pandas as pd
 
+import os
 
-dossier="C:/Users/Victor/Documents/programmes/blemais/" 
+#dossier="C:/Users/Victor/Documents/programmes/blemais/" 
+
+project_path = os.getcwd()
 
 
-# on charge les données
+# we load data
 
-PDmaize = pd.read_table(dossier+"TrainingDataSet_Maize.txt")
+PDmaize = pd.read_table(project_path+"TrainingDataSet_Maize.txt")
 colL = list(PDmaize)
-col={}
+col = {}
 for val,key in enumerate(colL):
+
     col[key]=val
+
 
 
 maize = np.array(maize)
