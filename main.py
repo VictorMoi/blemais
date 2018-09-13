@@ -12,6 +12,7 @@ if os.name == 'posix':
 else:
     project_path = 
 
+    
 # we load data
 def loadData(filename):
     PDmaize = pd.read_table(os.path.join(project_path, "data", filename))
@@ -22,13 +23,16 @@ def loadData(filename):
 maize, ind2name, name2ind = loadData("TrainingDataSet_Maize.txt")
 
 
+def addColumn(arr, ind2name, name2ind, name, column):
+    ind2name.append(name)
+    name2ind[name] = len(ind2name)
+    arr = np.concatenate(arr, column, axis=1)
+    return arr, ind2name, name2ind
 
-colL.index("Tx_1")
-col["Tx_1"]
 
-PDmaize["Tx_1"]
 
-maize[col["Tx_1"]]
+
+maize[name2ind["Tx_1"]]
 
 # création de nouvelles variables
 
@@ -36,6 +40,8 @@ maize[col["Tx_1"]]
 RUM = 10
 
 
+
+maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "RU_1", RUM)
 
 maize[col["RU_1"]]=RUM
 
@@ -50,14 +56,14 @@ for i in range(2,10):
     DE = (maize[col[colPR]] - maize[col[colETP]]) < 0
 
 
-
-  maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
-  maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
-  maize[!DE,colETR]<-maize[!DE,colETP]
-  maize[DE,colETR]<-maize[DE,colRU1]-maize[DE,colRU]+maize[DE,colPR]
-  maize[,colDE]<-maize[,colETP]-maize[,colETR]
-}
-
+#
+#  maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
+#  maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
+#  maize[!DE,colETR]<-maize[!DE,colETP]
+#  maize[DE,colETR]<-maize[DE,colRU1]-maize[DE,colRU]+maize[DE,colPR]
+#  maize[,colDE]<-maize[,colETP]-maize[,colETR]
+#}
+#
 
 
 
