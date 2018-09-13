@@ -15,11 +15,15 @@ project_path = os.getcwd()
 
 # we load data
 
-PDmaize = pd.read_table(project_path+"TrainingDataSet_Maize.txt")
+PDmaize = pd.read_table(os.path.join(project_path, "data", "TrainingDataSet_Maize.txt"))
+maize = np.array(PDmaize)
+
+
+
+
 colL = list(PDmaize)
 col = {}
 for val,key in enumerate(colL):
-
     col[key]=val
 
 
