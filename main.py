@@ -10,7 +10,7 @@ import os
 if os.name == 'posix':
     project_path = os.getcwd()
 else:
-    project_path = 
+    project_path = 'C:/Users/Victor/Document/programmes/Github/blemais'
 
     
 # we load data
@@ -51,17 +51,12 @@ for i in range(2,10):
     colETR = "ETR_" + i
     colDE = "DE_" + i
 
-    DE = (maize[col[colPR]] - maize[col[colETP]]) < 0
+    DE = (maize[name2ind[colPR]] - maize[name2ind[colETP]]) < 0
 
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colRU, np.minimum(maize[name2ind[colRU1]] + maize[name2ind[colPR]] - maize[name2ind[colETP]],RUM)*(1 - DE) + DE*np.maximum(maize[name2ind[colRU1]]*np.exp((maize[name2ind[colPR]] - maize[name2ind[colETP]])/RUM),0))
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colETR, DE*(maize[name2ind[colRU1]] + maize[name2ind[colPR]] - maize[name2ind[colRU]]) + (1-DE)*(maize[name2ind[colETP]]))
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colDE, maize[name2ind[colETP]] - maize[name2ind[colETR]])
 
-#
-#  maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
-#  maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
-#  maize[!DE,colETR]<-maize[!DE,colETP]
-#  maize[DE,colETR]<-maize[DE,colRU1]-maize[DE,colRU]+maize[DE,colPR]
-#  maize[,colDE]<-maize[,colETP]-maize[,colETR]
-#}
-#
 
 
 
