@@ -26,11 +26,10 @@ clf = KernelRidge(kernel='linear')
 clf = KernelRidge(kernel='rbf')
 
 clf.fit(X,y)
+
 #prediction = clf.predict(X)
 
 score = clf.score(X, y)
-
-
 
 # print 'Testing XOR'
 
