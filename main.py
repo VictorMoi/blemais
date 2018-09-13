@@ -8,10 +8,10 @@ import pandas as pd
 
 import os
 
-#dossier="C:/Users/Victor/Documents/programmes/blemais/" 
+#project_path="C:/Users/Victor/Documents/programmes/blemais/" 
 
 project_path = os.getcwd()
-
+print(project_path)
 
 # we load data
 
@@ -21,13 +21,16 @@ maize = np.array(PDmaize)
 ind2name = list(PDmaize)
 name2ind = {i:j for j,i in enumerate(ind2name)}
 
+def addColumn(arr, ind2name, name2ind, name, column):
+    ind2name.append(name)
+    name2ind[name] = len(ind2name)
+    arr = np.concatenate(arr, column, axis=1)
+    return arr, ind2name, name2ind
 
-colL.index("Tx_1")
-col["Tx_1"]
 
-PDmaize["Tx_1"]
 
-maize[col["Tx_1"]]
+
+maize[name2ind["Tx_1"]]
 
 # création de nouvelles variables
 
@@ -35,6 +38,8 @@ maize[col["Tx_1"]]
 RUM = 10
 
 
+
+maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "RU_1", RUM)
 
 maize[col["RU_1"]]=RUM
 
@@ -49,14 +54,14 @@ for i in range(2,10):
     DE = (maize[col[colPR]] - maize[col[colETP]]) < 0
 
 
-
-  maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
-  maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
-  maize[!DE,colETR]<-maize[!DE,colETP]
-  maize[DE,colETR]<-maize[DE,colRU1]-maize[DE,colRU]+maize[DE,colPR]
-  maize[,colDE]<-maize[,colETP]-maize[,colETR]
-}
-
+#
+#  maize[!DE,colRU]<-pmin(maize[!DE,colRU1]+maize[!DE,colPR]-maize[!DE,colETP],RUM)
+#  maize[DE,colRU]<-pmax(0,maize[DE,colRU1] * exp((maize[DE,colPR]-maize[DE,colETP])/RUM))
+#  maize[!DE,colETR]<-maize[!DE,colETP]
+#  maize[DE,colETR]<-maize[DE,colRU1]-maize[DE,colRU]+maize[DE,colPR]
+#  maize[,colDE]<-maize[,colETP]-maize[,colETR]
+#}
+#
 
 
 
