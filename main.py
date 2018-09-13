@@ -18,17 +18,9 @@ project_path = os.getcwd()
 PDmaize = pd.read_table(os.path.join(project_path, "data", "TrainingDataSet_Maize.txt"))
 maize = np.array(PDmaize)
 
+ind2name = list(PDmaize)
+name2ind = {i:j for j,i in enumerate(ind2name)}
 
-
-
-colL = list(PDmaize)
-col = {}
-for val,key in enumerate(colL):
-    col[key]=val
-
-
-
-maize = np.array(maize)
 
 colL.index("Tx_1")
 col["Tx_1"]
