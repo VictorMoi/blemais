@@ -60,3 +60,9 @@ for i in range(2,10):
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colETR, DE*(maize[:,name2ind[colRU1]] + maize[:,name2ind[colPR]] - maize[:,name2ind[colRU]]) + (1-DE)*(maize[:,name2ind[colETP]]))
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colDE, maize[:,name2ind[colETP]] - maize[:,name2ind[colETR]])
 
+for i in range(1,10):
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "Tm_" + str(i), (maize[:,name2ind["Tn_" + str(i)]] + maize[:,name2ind["Tx_" + str(i)]])/2 )
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "GDD5_" + str(i), np.maximum(maize[:,name2ind["Tx_" + str(i)]]-5,5))
+    
+maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "GDD5_49", maize[:,name2ind["GDD5_4"]]+maize[:,name2ind["GDD5_5"]]+maize[:,name2ind["GDD5_6"]]+maize[:,name2ind["GDD5_7"]]+maize[:,name2ind["GDD5_8"]]+maize[:,name2ind["GDD5_9"]])
+
