@@ -43,8 +43,6 @@ RUM = 10
 
 maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "RU_1", RUM)
 
-maize[col["RU_1"]]=RUM
-
 for i in range(2,10):
     colRU = "RU_" + i
     colRU1 = "RU_" + (i - 1)
