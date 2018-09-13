@@ -1,4 +1,1 @@
-TestDataSet_Maize_blind.txt
-TestDataSet_Wheat_blind.txt
-TrainingDataSet_Maize.txt
-TrainingDataSet_Wheat2.txt
+data/*
