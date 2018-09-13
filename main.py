@@ -5,21 +5,22 @@
 # chargement packages
 import numpy as np
 import pandas as pd
-
 import os
 
-#dossier="C:/Users/Victor/Documents/programmes/blemais/" 
-
-project_path = os.getcwd()
-
+if os.name == 'posix':
+    project_path = os.getcwd()
+else:
+    project_path = 
 
 # we load data
+def loadData(filename):
+    PDmaize = pd.read_table(os.path.join(project_path, "data", filename))
+    ind2name = list(PDmaize)
+    name2ind = {i:j for j,i in enumerate(ind2name)}
+    return np.array(PDmaize), ind2name, name2ind
 
-PDmaize = pd.read_table(os.path.join(project_path, "data", "TrainingDataSet_Maize.txt"))
-maize = np.array(PDmaize)
+maize, ind2name, name2ind = loadData("TrainingDataSet_Maize.txt")
 
-ind2name = list(PDmaize)
-name2ind = {i:j for j,i in enumerate(ind2name)}
 
 
 colL.index("Tx_1")
