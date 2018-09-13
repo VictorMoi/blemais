@@ -22,8 +22,12 @@ y = np.concatenate([np.ones(100), np.zeros(100)], axis = 0)
 
 
 from sklearn.kernel_ridge import KernelRidge
+clf = KernelRidge(kernel='cosine')
 clf = KernelRidge(kernel='linear')
+clf = KernelRidge(kernel='polynomial')
+clf = KernelRidge(kernel='sigmoid')
 clf = KernelRidge(kernel='rbf')
+clf = KernelRidge(kernel='chi2')
 
 clf.fit(X,y)
 #prediction = clf.predict(X)
