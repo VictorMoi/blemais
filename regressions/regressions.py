@@ -1,4 +1,3 @@
-#from sklearn.metrics import accuracy_score
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -6,19 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 import os
 import time
-#from matplotlib.colors import ListedColormap
 
 # from pykernels.pykernels.basic import *
-
-# from sklearn.neural_network import MLPClassifier
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.svm import SVC
-# from sklearn.gaussian_process import GaussianProcessClassifier
-# from sklearn.gaussian_process.kernels import RBF
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-# from sklearn.naive_bayes import GaussianNB
-# from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
@@ -40,8 +28,6 @@ from sklearn.linear_model import OrthogonalMatchingPursuit
 from sklearn.linear_model import OrthogonalMatchingPursuitCV
 from sklearn.linear_model import BayesianRidge
 from sklearn.linear_model import ARDRegression
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.linear_model import LogisticRegressionCV
 from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import PassiveAggressiveRegressor
 from sklearn.linear_model import RANSACRegressor
@@ -72,6 +58,7 @@ Interesting as well :
     http://scikit-learn.org/stable/model_selection.html
 
 Non exhaustive list of possible regressions :
+    LinearRegression()
     Ridge(alpha = .5)
     RidgeCV(alphas=[0.1, 1.0, 10.0])
     Lasso(alpha = 0.1)
@@ -131,7 +118,17 @@ Example of use :
     
 def show_regression(reg, x, y):
     """
-    Print a 2D decision space
+    ********* Description *********
+    Plot a 2D regression with points
+    ********* Params *********
+    reg : (sklearn.regression) : regression
+    x : np.ndarray(n, 1) : points
+    y : np.ndarray(n, 1) : targets
+    ********* Examples *********
+    x, y = load_dataset()
+    reg = Ridge()
+    reg.fit(x, y)
+    show_regression(reg, x, y)
     """
     if (len(x.shape) > 1) and (x.shape[1] != 1):
         print "Warning : you cannot use the function show_regression if you are not in 1D"
@@ -145,7 +142,7 @@ def show_regression(reg, x, y):
         x_span = x_max-x_min
         x_min = x_min - x_span/20.
         x_max = x_max + x_span/20.
-        h = x_span/100
+        h = x_span/100.
         xl = np.arange(x_min, x_max, h).reshape(-1, 1)
         yl = reg.predict(xl)
         plt.plot(x, y, '.k')
@@ -157,16 +154,26 @@ def show_regression(reg, x, y):
 
 def get_regressions(n=0):
     """
+    ********* Description *********
     Return a list of regressions, bigger or smaller depending of the value of n
-    if n is negative, it returns only one regression
-    if n is zero, it returns one regression of each type
-    if n is strictly positive, it returns more classfiers (Not implemented yet)
-    otherwise, it returns an empty list
+    ********* Params *********
+    n : (int) or (str) = 0 : instructions over the regressions to return : 
+     - if n is negative, it returns only one regression
+     - if n is zero (default value), it returns one regression of each type
+     - if n is strictly positive, it returns more regressions (Not implemented yet)
+     - if n is filename, it executes the code inside and returns the contents of variable "regressions"
+     - if n is a string, it executes n and returns the contents of variable "regressions"
+     - otherwise, it returns an empty list
+    ********* Examples *********
+    regs = get_regressions()
+    regs = get_regressions(0)
+    regs = get_regressions("reg_lists/one_of_each.py")
+    regs = get_regressions("regressions = [('a.1', Ridge(alpha = .1)), ('a.5', Ridge(alpha = .5))]")
     """
     try:
         if (type(n) == int):
             if (n < 0):
-                regressions = [("Nearest Neighbors", KNeighborsRegression(3))]
+                regressions = [("Linear Regression", LinearRegression())]
             elif (n == 0):
                 this_file_path = '/'.join(__file__.split('/')[:-1])
                 with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:
@@ -180,7 +187,7 @@ def get_regressions(n=0):
                     r = f.read()
                     exec(r)
             else:
-                exec(r)
+                exec(n)
         else:
             regressions = []
     except:
@@ -191,6 +198,34 @@ def get_regressions(n=0):
 
 
 def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", _error_test=None):
+    """
+    ********* Description *********
+    Fit and return the error of one regression
+    ********* Params *********
+    x_train : (np.ndarray(n, dx)) : points
+    x_train : (np.ndarray(n, dy)) : targets
+    reg : (sklearn.regression) : regression used
+    error_func : (func) = sklearn.mean_squared_error : the error used
+    x_test : np.ndarray(m, dx) or (int) or (float) = None : test points, or
+        indication to use K-fold separation on x_train, 
+        more precisely if (int) then the train is on (n-x_test) points, 
+        and if (float) then the train is on (n*(1-x_test)) points
+        if None we don't compute test error
+    y_test : np.ndarray(m, dx) = None : test target
+    verbose : (bool) = True : whether we print the regression error
+    show : (bool) = True : whether we plot the regression
+    i : (str) or (int) : the index of this regression, generally used by run_all_regressions
+    _error_test : (float) = None : if x_test = None, we set the test error to this value
+    ********* Return *********
+    (error_train, error_test)
+    ********* Examples *********
+    x, y = load_dataset()
+    reg = Ridge()
+    error_train, error_test = run_one_regression(x, y, reg)
+    error_train, error_test = run_one_regression(x, y, reg, show=False)
+    error_train, error_test = run_one_regression(x, y, reg, show=False, verbose=False)
+    error_train, error_test = run_one_regression(x, y, reg, i=666)
+    """
     # We define reg and name etc
     reg, name = _get_reg_attributes(reg)
     # We run the regression
@@ -242,7 +277,7 @@ def _get_reg_attributes(reg):
 
 def _repr_show(i, name, error_train, error_test=None):
     # Representation for a plot title when we test a regression
-    t = "{}\n".format(i)
+    t = ("" if (i == "") else "{}\n".format(i))
     t += ("" if (name == "") else ("name : {}\n".format(name)))
     t += "error_train : {0:.3f}".format(error_train)
     t += ("" if (error_test is None) else "\nerror_test : {0:.3f}".format(error_test))
@@ -252,8 +287,8 @@ def _repr_show(i, name, error_train, error_test=None):
 
 def _repr_verbose(i, name, error_train, error_test=None):
     # Representation of a verbose line when we test a regression
-    t = "{}".format(i)
-    t += " : error_train : {0:.3f}".format(error_train)
+    t = ("" if (i == "") else "{} : ".format(i))
+    t += "error_train : {0:.3f}".format(error_train)
     t += ("" if (error_test is None) else " : error_test : {0:.3f}".format(error_test))
     t += ("" if (name == "") else ("   -   name : {}".format(name)))
     return t
@@ -265,8 +300,11 @@ def _verbose_show_proper(length, verbshow):
     if (type(verbshow) == bool):
         res = [verbshow for i in range(length)]
     elif ((type(verbshow) == list) or (type(verbshow) == tuple) or (type(verbshow) == np.ndarray)):
-        if (len(verbshow) >= length) and (type(verbshow[0]) == bool):
-            res = [i for i in verbshow[:length]]
+        if (len(verbshow) >= 1) and (type(verbshow[0]) == bool):
+            res = [False for i in range(length)]
+            for i,j in enumerate(verbshow):
+                if (i < len(res)):
+                    res[i] = j
         else:
             res = [False for i in range(length)]
             for i in verbshow:
@@ -278,9 +316,40 @@ def _verbose_show_proper(length, verbshow):
 
 
 
-def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, verbose=True, show=False, x_test=None, y_test=None, selection_algo=None, final_verbose=range(10), final_show=False, sort_key=lambda x:x["error_test"]):
+def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=lambda x:x["error_test"]):
     """
-    Try a lot of different regressions, and can show some of them
+    ********* Description *********
+    Try several different regressions, and can show and verbose some of them
+    ********* Params *********
+    x_train : (np.ndarray(n, dx)) : points
+    x_train : (np.ndarray(n, dy)) : targets
+    regs : (int) or (str) or [(sklearn.regression)] : regressions used following get_regressions syntax
+    error_func : (func) = sklearn.mean_squared_error : the error used
+    x_test : np.ndarray(m, dx) or (int) or (float) = None : test points, or
+        indication to use K-fold separation on x_train, 
+        more precisely if (int) then the train is on (n-x_test) points, 
+        and if (float) then the train is on (n*(1-x_test)) points
+        if None we don't compute test error
+    y_test : np.ndarray(m, dx) = None : test target
+    selection_algo : (MAB class) = None : Rules the run sequence of regressions, cf multi_armed_bandit
+    verbose : (bool) or [(bool)] or [(int)] = True : whether we print the regressions error
+    show : (bool) or [(bool)] or [(int)] = False : whether we plot the regressions
+    final_verbose : (bool) or [(bool)] or [(int)] = range(10) : same as verbose but for reg classement
+    final_show : (bool) or [(bool)] or [(int)] = False : same as show but for reg classement
+    sort_key : (lambda reg -> float) = lambda x:x["error_test"] : key for regressions final classment
+    ********* Return *********
+    error of regressions tested
+    ********* Examples *********
+    x, y = load_dataset("boston")
+    errors = run_all_regressions(x, y)
+    errors = run_all_regressions(x, y, x_test=0.1)
+    errors = run_all_regressions(x, y, x_test=0.1, final_verbose=range(3))
+    errors = run_all_regressions(x, y, x_test=0.1, final_verbose=[True, True, True])
+    errors = run_all_regressions(x, y, x_test=0.1, verbose=False)
+    sel = Uniform_MAB(1, 100) # Will run 100 tests
+    errors = run_all_regressions(x, y, x_test=0.1, verbose=True, selection_algo=sel)
+    sel = Uniform_MAB(1, None, 8) # Will run during 8 seconds
+    errors = run_all_regressions(x, y, x_test=0.1, verbose=False, selection_algo=sel)
     """
     # We define regs
     if (type(regs) == int):
@@ -296,6 +365,8 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
     else:
         test_size=None
     # We run all the regressions following selection_algo
+    if any(verbose) or any(final_verbose):
+        print "\n\n\n"
     nbr_ex = 0
     start_time = time.time()
     if selection_algo is None:
@@ -343,6 +414,17 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
 
 
 def load_dataset(dataset="default"):
+    """
+    ********* Description *********
+    Load simple common datasets
+    ********* Params *********
+    dataset : (str) : "default" : the dataset name to use
+    ********* Return *********
+    (x, y) : points, targets
+    ********* Examples *********
+    x, y = load_dataset(dataset="default")
+    x, y = load_dataset(dataset="boston")
+    """
     if (dataset == "boston"):
         from sklearn.datasets import load_boston
         boston = load_boston()
@@ -350,51 +432,21 @@ def load_dataset(dataset="default"):
     x = np.random.randn(1000,1)
     y = x*3 + 2 + np.random.randn(1000,1)/10.
     return x, y
-    # if (dataset == "moons"):
-    #     from sklearn.datasets import make_moons
-    #     return make_moons(noise=0.3, random_state=0)
-    # elif (dataset == "circles"):
-    #     from sklearn.datasets import make_circles
-    #     return make_circles(noise=0.2, factor=0.5, random_state=1)
     
 
         
-def run_examples(verbose=True, show=False, dataset="default"):
+def run_examples(verbose=True, show=True, dataset="default"):
     """
-    Run all type of regressions possible on an classical dataset
+    ********* Description *********
+    Run some regressions and show them as an example
+    ********* Params *********
+    verbose : (bool) = True : whether we print the regression error
+    show : (bool) = True : whether we plot the regression error
+    dataset : (str) = "default" : which dataset to use
+    ********* Examples *********
+    run_examples()
+    run_examples(show=False)
+    run_examples(verbose=False, show=False) # You will get nothing from that !
     """
     x, y = load_dataset(dataset)
     run_all_regressions(x, y, regs=0, verbose=verbose, show=show, x_test=0.1)
-
-
-
-        
-# def run_examples(x=None, y=None, show=True):
-#     """
-#     Run all type of regressions possible
-#     """
-#     if (x is None) or (y is None):
-#         from sklearn.datasets import make_moons
-#         x, y = make_moons(noise=0.3, random_state=0)
-#     names = ["Nearest Neighbors", "Linear SVM", "Sigmoid SVM", "rbf SVM",
-#              "RBF SVM", "Gaussian Process", "Decision Tree", "Random Forest",
-#              "Neural Net", "AdaBoost", "Naive Bayes", "QDA"]
-#     for i, reg in enumerate([KNeighborsClassifier(3),
-#                              SVC(kernel="linear", C=0.025),
-#                              SVC(kernel="sigmoid", C=0.025),
-#                              SVC(kernel="rbf", C=0.025),
-#                              SVC(gamma=2, C=1),
-#                              GaussianProcessClassifier(1.0 * RBF(1.0)),
-#                              DecisionTreeClassifier(max_depth=5),
-#                              RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-#                              MLPClassifier(alpha=1),
-#                              AdaBoostClassifier(),
-#                              GaussianNB(),
-#                              QuadraticDiscriminantAnalysis()]):
-#         reg.fit(x, y)
-#         error = reg.error(x, y)
-#         if show:
-#             plt.title("name : {}\nerror : {}".format(names[i], error))
-#             print_decision_space(reg, x, y)
-#         else:
-#             print "name : {}   -   error : {}".format(names[i], error)

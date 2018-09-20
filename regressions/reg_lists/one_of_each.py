@@ -1,5 +1,6 @@
 regressions = [
 
+    ("Linear Regression", LinearRegression()), 
     ("Ridge", Ridge(alpha = .5)),
     ("RidgeCV", RidgeCV(alphas=[0.1, 1.0, 10.0])),
     ("Lasso", Lasso(alpha = 0.1)),
