@@ -373,7 +373,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
     errors = run_all_regressions(x, y, x_test=0.1, verbose=False, selection_algo=sel)
     """
     # We define regs
-    if (type(regs) == int):
+    if (type(regs) == int) or (type(regs) == str):
         regs = get_regressions(0)
     # We properly define show, ie it will be a list of bool
     show = _verbose_show_proper(len(regs), show)
