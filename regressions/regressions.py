@@ -1,9 +1,14 @@
 import numpy as np
+import os
+import sys
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
+
+if os.name == 'posix':
+    from sklearn.model_selection import train_test_split
+else:
+    from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
-import os
 import time
 
 # from pykernels.pykernels.basic import *
@@ -32,21 +37,27 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import PassiveAggressiveRegressor
 from sklearn.linear_model import RANSACRegressor
 from sklearn.linear_model import TheilSenRegressor
-from sklearn.linear_model import HuberRegressor
+if os.name == 'posix':
+    from sklearn.linear_model import HuberRegressor
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 
 from sklearn.kernel_ridge import KernelRidge
-from sklearn.gaussian_process import GaussianProcessRegressor
+if os.name == 'posix':
+    from sklearn.gaussian_process import GaussianProcessRegressor
 # from sklearn.preprocessing import PolynomialFeatures
 # from sklearn.pipeline import Pipeline
 from sklearn.svm import SVR
 
+if os.name != 'posix':
+    __file__ = "C:/Users/Victor/Documents/programmes/Github/blemais/regressions"
+
+
 
 def help():
-    print """
+    print("""
 Regressions, ie takes an array as input and outputs a float
 
 Uses the package scikit-learn 
@@ -112,7 +123,7 @@ Example of use :
 
     # Show regression
     show_regression(reg, x_test, y_test)
-"""
+""")
 
 
     
@@ -131,7 +142,7 @@ def show_regression(reg, x, y):
     show_regression(reg, x, y)
     """
     if (len(x.shape) > 1) and (x.shape[1] != 1):
-        print "Warning : you cannot use the function show_regression if you are not in 1D"
+        print("Warning : you cannot use the function show_regression if you are not in 1D")
     else:
         if (len(x.shape) == 1):
             x_min = np.min(x)
@@ -149,7 +160,14 @@ def show_regression(reg, x, y):
         plt.plot(xl, yl, 'r')
         plt.show()
 
-
+def execute_regression_file(s):
+	if sys.version_info[0]==2:
+		exec(s)
+		return regressions
+	else:
+		namespace={}
+		exec(s, namespace)
+		return namespace['regressions']
 
 
 def get_regressions(n=0):
@@ -175,23 +193,26 @@ def get_regressions(n=0):
             if (n < 0):
                 regressions = [("Linear Regression", LinearRegression())]
             elif (n == 0):
-                this_file_path = '/'.join(__file__.split('/')[:-1])
+                if os.name != 'posix':
+                    this_file_path = 'C:/Users/Victor/Documents/programmes/Github/blemais/regressions'
+                else:    
+                    this_file_path = '/'.join(__file__.split('/')[:-1])
                 with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:
                     r = f.read()
-                    exec(r)
+                    regressions=execute_regression_file(r)
             else:
                 regressions = []
         elif (type(n) == str):
             if (n[-3:] == ".py"):
                 with open(n) as f:
                     r = f.read()
-                    exec(r)
-            else:
-                exec(n)
+                    regressions=execute_regression_file(r)
+            #else:
+                #regressions=execute_regression_file(n)
         else:
             regressions = []
     except:
-        print "Error while loading a list of regressions, the error is likely to be in the argument n."
+        print("Error while loading a list of regressions, the error is likely to be in the argument n.")
         raise
     return [(i[1], i[0]) for i in regressions]
 
@@ -245,14 +266,14 @@ def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_t
             show_regression(reg, x_train, y_train)
         if verbose:
             t = _repr_verbose(i, name, error_train, error_test)
-            print t
+            print(t)
     except ValueError:
-        print "Kernel {} failed with the data provided".format(name)
+        print("Kernel {} failed with the data provided".format(name))
         return (0, 0)
     except KeyboardInterrupt:
         raise
     except:
-        print "Kernel {} failed".format(name)
+        print("Kernel {} failed".format(name))
         return (0, 0)
     return (error_train, error_test)
 
@@ -366,7 +387,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         test_size=None
     # We run all the regressions following selection_algo
     if any(verbose) or any(final_verbose):
-        print "\n\n\n"
+        print("\n\n\n")
     nbr_ex = 0
     start_time = time.time()
     if selection_algo is None:
@@ -404,7 +425,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
     final_show = _verbose_show_proper(nbr_ex, final_show)
     final_verbose = _verbose_show_proper(nbr_ex, final_verbose)
     if any(verbose) or any(final_verbose):
-        print "\nFinished running {} examples in {} seconds\n".format(nbr_ex, time.time() - start_time)
+        print("\nFinished running {} examples in {} seconds\n".format(nbr_ex, time.time() - start_time))
     if any(final_verbose) or any(final_show):
         errors_sorted = sorted(errors, key=sort_key)
         for ic, ss, sho, verb in zip(range(len(final_show)), errors_sorted, final_show, final_verbose):

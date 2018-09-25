@@ -19,9 +19,9 @@ regressions = [
     ("Passive Aggressive Regression", PassiveAggressiveRegressor()),
     ("RANSAC Regression", RANSACRegressor()),
     ("Theil Sen Regression", TheilSenRegressor()),
-    ("Huber Regression", HuberRegressor()),
     ("Kernel Ridge", KernelRidge()),
-    ("Gaussian Process Regression", GaussianProcessRegressor()),
     ("SVR", SVR())
 
 ]
+#("Huber Regression", HuberRegressor()),
+#("Gaussian Process Regression", GaussianProcessRegressor()),
