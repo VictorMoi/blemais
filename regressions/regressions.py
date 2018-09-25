@@ -37,20 +37,17 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import PassiveAggressiveRegressor
 from sklearn.linear_model import RANSACRegressor
 from sklearn.linear_model import TheilSenRegressor
-if os.name == 'posix':
-    from sklearn.linear_model import HuberRegressor
-
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import GradientBoostingRegressor
-
 from sklearn.kernel_ridge import KernelRidge
-if os.name == 'posix':
-    from sklearn.gaussian_process import GaussianProcessRegressor
 # from sklearn.preprocessing import PolynomialFeatures
 # from sklearn.pipeline import Pipeline
 from sklearn.svm import SVR
-
+if os.name == 'posix':
+    from sklearn.linear_model import HuberRegressor
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    
 if os.name != 'posix':
     __file__ = "C:/Users/Victor/Documents/programmes/Github/blemais/regressions"
 

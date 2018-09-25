@@ -100,6 +100,7 @@ x = preprocessing.scale(maize[:, 1:])
 y = preprocessing.scale(maize[:, 0])
 
 
+
 from regressions.regressions import *
 
 err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1)
