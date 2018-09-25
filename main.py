@@ -42,14 +42,14 @@ def addColumn(arr, ind2name, name2ind, name, column):
 def addDE(maize, ind2name, name2ind, RUM=10, name=False):
     if type(name) != type(""):
         name = str(RUM)    
-    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind,  "RU_" + name + "_1", np.array([RUM for i in range(len(maize))]))
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind,  "RU" + name + "_1", np.array([RUM for i in range(len(maize))]))
     
     for i in range(2,10):
         colRU = "RU" + name + "_" + str(i)
         colRU1 = "RU" + name + "_" + str(i - 1)
-        colPR = "PR" + name + "_" + str(i)
-        colETP = "ETP" + name + "_" + str(i)
-        colETR = "ETR" + str(i)
+        colPR = "PR_" + str(i)
+        colETP = "ETP_" + str(i)
+        colETR = "ETR" + name + str(i)
         colDE = "DE" + name + "_" + str(i)
     
         DE = (maize[:,name2ind[colPR]] - maize[:,name2ind[colETP]]) < 0
