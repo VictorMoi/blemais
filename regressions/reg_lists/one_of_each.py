@@ -14,7 +14,6 @@ regressions = [
     ("LarsCV", LarsCV()),
     ("Orthogonal Matching Pursuit", OrthogonalMatchingPursuit(n_nonzero_coefs = 1)),
     ("Bayesian Ridge", BayesianRidge()),
-    ("ARD Regression", ARDRegression()),
     ("SGD Regression", SGDRegressor()),
     ("Passive Aggressive Regression", PassiveAggressiveRegressor()),
     ("RANSAC Regression", RANSACRegressor()),
@@ -23,5 +22,6 @@ regressions = [
     ("SVR", SVR())
 
 ]
+#    ("ARD Regression", ARDRegression()),
 #("Huber Regression", HuberRegressor()),
 #("Gaussian Process Regression", GaussianProcessRegressor()),
