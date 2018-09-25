@@ -160,15 +160,18 @@ def show_regression(reg, x, y):
         plt.plot(xl, yl, 'r')
         plt.show()
 
-def execute_regression_file(s):
-	if sys.version_info[0]==2:
-		exec(s)
-		return regressions
-	else:
-		namespace={}
-		exec(s, namespace)
-		return namespace['regressions']
 
+        
+def execute_regression_file(s):
+    if (sys.version_info[0] == 2):
+        exec(s)
+        return regressions
+    else:
+        namespace = globals()
+        exec(s, namespace)
+        return namespace['regressions']
+
+    
 
 def get_regressions(n=0):
     """
@@ -199,16 +202,16 @@ def get_regressions(n=0):
                     this_file_path = '/'.join(__file__.split('/')[:-1])
                 with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:
                     r = f.read()
-                    regressions=execute_regression_file(r)
+                    regressions = execute_regression_file(r)
             else:
                 regressions = []
         elif (type(n) == str):
             if (n[-3:] == ".py"):
                 with open(n) as f:
                     r = f.read()
-                    regressions=execute_regression_file(r)
-            #else:
-                #regressions=execute_regression_file(n)
+                    regressions = execute_regression_file(r)
+            else:
+                regressions = execute_regression_file(n)
         else:
             regressions = []
     except:
