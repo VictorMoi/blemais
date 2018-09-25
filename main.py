@@ -80,8 +80,24 @@ maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
 
 
 
-x = maize[:, 1:]
-y = maize[:, 0]
+
+
+import warnings
+
+#from sklearn.exceptions import FutureWarning
+from sklearn.exceptions import ConvergenceWarning
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+
+from sklearn import preprocessing
+
+
+
+
+x = preprocessing.scale(maize[:, 1:])
+y = preprocessing.scale(maize[:, 0])
 
 
 from regressions.regressions import *
