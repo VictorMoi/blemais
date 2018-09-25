@@ -35,9 +35,9 @@ def addColumn(arr, ind2name, name2ind, name, column):
 
 # maize[name2ind["Tx_1"]]
 
-# création de nouvelles variables
+# creation de nouvelles variables
 
-###  Déficit hydrique
+###  Deficit hydrique
 
 def addDE(maize, ind2name, name2ind, RUM=10, name=False):
     if type(name) != type(""):
@@ -78,3 +78,12 @@ maize, ind2name, name2ind = addDE(maize, ind2name, name2ind)
 maize, ind2name, name2ind = addTm(maize, ind2name, name2ind)
 maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
 
+
+
+x = maize[:, 1:]
+y = maize[:, 0]
+
+
+from regressions.regressions import *
+
+err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1)
