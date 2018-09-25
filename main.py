@@ -7,6 +7,15 @@ import numpy as np
 import pandas as pd
 import os
 
+
+from regressions.regressions import *
+from multi_armed_bandit.multi_armed_bandit import *
+from sklearn import preprocessing
+import warnings
+#from sklearn.exceptions import FutureWarning
+if os.name == 'posix':
+    from sklearn.exceptions import ConvergenceWarning
+
 if os.name == 'posix':
     project_path = os.getcwd()
 else:
@@ -82,25 +91,24 @@ maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
 
 
 
-import warnings
 
-#from sklearn.exceptions import FutureWarning
-from sklearn.exceptions import ConvergenceWarning
-
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-
-from sklearn import preprocessing
+if os.name == 'posix':
+    warnings.filterwarnings("ignore", category=ConvergenceWarning)
+    warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 
-
-x = preprocessing.scale(maize[:, 1:])
-y = preprocessing.scale(maize[:, 0])
+np.mean(maize[:,1])
 
 
 
-from regressions.regressions import *
+x = preprocessing.scale(maize[:, 2:])
+y = preprocessing.scale(maize[:, 1])
+
+
+
+
 
 err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1)
+sel = Uniform_MAB(1, 10)
+err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
