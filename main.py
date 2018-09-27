@@ -109,6 +109,6 @@ y = preprocessing.scale(maize[:, 1])
 
 
 
-err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1)
+err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 sel = Uniform_MAB(1, 10)
 err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
