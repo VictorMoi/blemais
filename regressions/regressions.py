@@ -200,7 +200,7 @@ def get_regressions(n=0):
 
 
 
-def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", _error_test=None, _run_time=None):
+def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i=""):
     """
     ********* Description *********
     Fit and return the error of one regression
