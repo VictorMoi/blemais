@@ -405,7 +405,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         errors = []
         for ic, sho, verb, reg in zip(range(len(show)), show, verbose, regs):
             nbr_ex += 1
-            tr, te, ti = run_one_regression(x_tr, y_tr, reg, error_func, x_te, y_te, verbose=verb, show=sho, i=ic)
+            tr, te, ti = _run_one_regression(x_tr, y_tr, reg, error_func, x_te, y_te, verbose=verb, show=sho, i=ic)
             errors.append({"i":ic, "error_train":tr, "error_test":te, "reg":reg, "time":ti})
     else:
         # In this section we follow the class selection_algo to perform the regressions tests
@@ -417,7 +417,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
                 x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
             else:
                 x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size)
-            tr, te, ti = run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex)
+            tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex)
             selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
             arm = selection_algo.next_arm()
             nbr_ex += 1
