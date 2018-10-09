@@ -2,11 +2,14 @@
 
 #V: Je fais un peu nawak, on reparlera organisation de code etc...
 
+
+
+
 # chargement packages
 import numpy as np
 import pandas as pd
 import os
-
+import sys
 
 from regressions.regressions import *
 from multi_armed_bandit.multi_armed_bandit import *
@@ -20,6 +23,8 @@ if os.name == 'posix':
     project_path = os.getcwd()
 else:
     project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
+    sys.path.append(project_path)
+    sys.path.append(project_path+'/regressions')
 
     
 # we load data
