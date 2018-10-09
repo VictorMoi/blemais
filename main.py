@@ -132,25 +132,31 @@ for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
 
 year = maize[:, 0]
 
-def splitTestYear (x, y, year, nb_year=4, seed=0, n=0):
+def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     random.seed(seed)    
     sel_year=np.array(list(set(year)))
     random.shuffle(sel_year)
-    ind_test =     np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
+    ind_test = np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
     year_test = sel_year[ind_test]
     year_train = np.array(list(set(sel_year) - set(year_test)),dtype=np.int)
     x_test = x[np.asarray([(i in year_test) for i in year]),:]
     y_test = y[np.asarray([(i in year_test) for i in year])]
     x_train = x[np.asarray([(i in year_train) for i in year]),:]
     y_train = y[np.asarray([(i in year_train) for i in year])]
-    return x_train, y_train, x_test, y_test
+    return x_train, x_test, y_train, y_test
 
+
+def split_func_for_reg(x, y, test_size=0.1, random_state=0):
+    if isinstance(test_size, float):
+        return splitTestYear(x, y, year, nb_year=int(test_size*len(set(year))), seed=random_state, n=0)
+    else:
+        return splitTestYear(x, y, year, nb_year=test_size, seed=random_state, n=0)
 
 
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 37)
-err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel, seed=3)
+sel = Uniform_MAB(1, 37*3)
+err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel, seed=3, split_func=split_func_for_reg)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
@@ -168,9 +174,9 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
 
-from sklearn.preprocessing import PolynomialFeatures
-poly = PolynomialFeatures(2)#, interaction_only=True)
-poly.fit(x)
-xx = poly.transform(x)
+# from sklearn.preprocessing import PolynomialFeatures
+# poly = PolynomialFeatures(2)#, interaction_only=True)
+# poly.fit(x)
+# xx = poly.transform(x)
 
-xx = np.concatenate([x, x*x], axis=1)
+# xx = np.concatenate([x, x*x], axis=1)

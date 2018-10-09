@@ -356,7 +356,7 @@ def _verbose_show_proper(length, verbshow):
 
 
 
-def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None):
+def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None, split_func=train_test_split):
     """
     ********* Description *********
     Try several different regressions, and can show and verbose some of them
@@ -418,7 +418,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         if x_test is None:
             x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
         else:
-            x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=seed)
+            x_tr, x_te, y_tr, y_te = split_func(x_train, y_train, test_size=test_size, random_state=seed)
         # We try over all regressions
         errors = []
         for ic, sho, verb, reg in zip(range(len(show)), show, verbose, regs):
@@ -439,7 +439,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
             if x_test is None:
                 x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
             else:
-                x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=sd+n_draw)
+                x_tr, x_te, y_tr, y_te = split_func(x_train, y_train, test_size=test_size, random_state=sd+n_draw)
             tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex)
             selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
             arm = selection_algo.next_arm()
