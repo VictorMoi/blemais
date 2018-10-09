@@ -154,6 +154,10 @@ err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbos
 err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 # sel = Uniform_MAB(1, 370)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
+# err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
+#err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+sel = Uniform_MAB(1, 37)
+err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel, seed=3)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
@@ -174,3 +178,10 @@ for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
 
 err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
+
+from sklearn.preprocessing import PolynomialFeatures
+poly = PolynomialFeatures(2)#, interaction_only=True)
+poly.fit(x)
+xx = poly.transform(x)
+
+xx = np.concatenate([x, x*x], axis=1)
