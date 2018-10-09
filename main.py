@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import os
 import sys
+import random
 
 from regressions.regressions import *
 from multi_armed_bandit.multi_armed_bandit import *
@@ -112,15 +113,44 @@ if os.name == 'posix':
 
 np.mean(maize[:,1])
 
-
-
-x = preprocessing.scale(maize[:, 2:])
 y = preprocessing.scale(maize[:, 1])
 
 
+
+def delVar(x, xind2name, xname2ind, name):
+    x = x[:,set(range(len(x)))-set(xname2ind[name])]
+    xind2name = xind2name[set(range(len(x)))-set(xname2ind[name])]
+    del xname2ind[name]
+    return x, xind2name, xname2ind
+
+x = preprocessing.scale(maize[:, 2:])
+xind2name = ind2name[2:]
+xname2ind = name2ind
+for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
+    del xname2ind[ind2name[i]]
+
+
+year = maize[:, 0]
+
+def splitTestYear (x, y, year, nb_year=4, seed=0, n=0):
+    random.seed(seed)    
+    sel_year=np.array(list(set(year)))
+    random.shuffle(sel_year)
+    ind_test =     np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
+    year_test = sel_year[ind_test]
+    year_train = np.array(list(set(sel_year) - set(year_test)),dtype=np.int)
+    x_test = x[np.asarray([(i in year_test) for i in year]),:]
+    y_test = y[np.asarray([(i in year_test) for i in year])]
+    x_train = x[np.asarray([(i in year_train) for i in year]),:]
+    y_train = y[np.asarray([(i in year_train) for i in year])]
+    return x_train, y_train, x_test, y_test
 
 
 
 err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 sel = Uniform_MAB(1, 10)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
+
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
+
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
