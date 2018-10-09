@@ -193,7 +193,7 @@ def get_regressions(n=0):
             else:
                 regressions = []
         elif isinstance(n, str):
-            regressions = get_regressions_from(filename)
+            regressions = get_regressions_from(n)
             # if (n[-3:] == ".py"):
             #     with open(n) as f:
             #         r = f.read()

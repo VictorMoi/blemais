@@ -121,6 +121,18 @@ y = preprocessing.scale(maize[:, 1])
 
 
 
-err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
-sel = Uniform_MAB(1, 10)
+#err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
+err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+# sel = Uniform_MAB(1, 370)
+# err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
+
+
+# from sklearn.decomposition import PCA
+# pca = PCA(n_components=2)
+# pca.fit(x)
+# import copy
+# a = copy.deepcopy(pca.components_)
+# ia = np.argsort(a[1,:])
+# [(round(a[1,i],3), ind2name[i]) for i in ia]
+# plt.plot(a[:,ia].transpose())

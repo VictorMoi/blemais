@@ -1,5 +1,6 @@
 data/*
 pykernels/*
+features_selection/*
 kernels/tests*
 kernels/doc*
 kernels/pykernels/graph/data*
