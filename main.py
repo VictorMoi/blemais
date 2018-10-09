@@ -2,7 +2,7 @@
 
 #V: Je fais un peu nawak, on reparlera organisation de code etc...
 
-
+# exec(open('C:/Users/Victor/Documents/programmes/Github/blemais/main.py').read())
 
 
 # chargement packages
