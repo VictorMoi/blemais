@@ -21,9 +21,10 @@ from .includes import *
 
 import warnings
 if os.name == 'posix':
-    from sklearn.exceptions import DataConversionWarning
+    from sklearn.exceptions import DataConversionWarning, ConvergenceWarning
     warnings.filterwarnings("ignore", category=FutureWarning)
     warnings.filterwarnings("ignore", category=DataConversionWarning)
+    warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 if os.name != 'posix':
