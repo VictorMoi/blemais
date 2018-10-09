@@ -18,10 +18,10 @@ except ImportError:
 
 from .includes import *
 
-from sklearn.exceptions import DataConversionWarning
 
 import warnings
 if os.name == 'posix':
+    from sklearn.exceptions import DataConversionWarning
     warnings.filterwarnings("ignore", category=FutureWarning)
     warnings.filterwarnings("ignore", category=DataConversionWarning)
 
