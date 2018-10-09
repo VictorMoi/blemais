@@ -111,15 +111,15 @@ if os.name == 'posix':
 
 
 
-np.mean(maize[:,1])
+#np.mean(maize[:,1])
 
 y = preprocessing.scale(maize[:, 1])
 
 
 
 def delVar(x, xind2name, xname2ind, name):
-    x = x[:,set(range(len(x)))-set(xname2ind[name])]
-    xind2name = xind2name[set(range(len(x)))-set(xname2ind[name])]
+    x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[name]])),dtype=np.int)]
+    xind2name.remove(name)
     del xname2ind[name]
     return x, xind2name, xname2ind
 
@@ -129,6 +129,8 @@ xname2ind = name2ind
 for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
     del xname2ind[ind2name[i]]
 
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
+#x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
 year = maize[:, 0]
 
@@ -153,6 +155,11 @@ def split_func_for_reg(x, y, test_size=0.1, random_state=0):
         return splitTestYear(x, y, year, nb_year=test_size, seed=random_state, n=0)
 
 
+#err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
+err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+# sel = Uniform_MAB(1, 370)
+# err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 sel = Uniform_MAB(1, 37*3)
@@ -169,9 +176,13 @@ err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, fi
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
+x = preprocessing.scale(maize[:, 2:])
+xind2name = ind2name[2:]
+xname2ind = name2ind
+for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
+    del xname2ind[ind2name[i]]
 
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 
 # from sklearn.preprocessing import PolynomialFeatures
