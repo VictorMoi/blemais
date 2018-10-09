@@ -1,4 +1,7 @@
 data/*
 pykernels/*
+kernels/tests*
+kernels/doc*
+kernels/pykernels/graph/data*
 *~
 *.pyc
