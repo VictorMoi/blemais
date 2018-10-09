@@ -209,7 +209,7 @@ def get_regressions(n=0):
 
 
 
-def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i=""):
+def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None):
     """
     ********* Description *********
     Fit and return the error of one regression
@@ -238,11 +238,11 @@ def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_t
     error_train, error_test, run_time = run_one_regression(x, y, reg, show=False, verbose=False)
     error_train, error_test, run_time = run_one_regression(x, y, reg, i=666)
     """
-    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i)
+    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i, seed=seed)
 
 
 
-def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", _error_test=None, _run_time=None):
+def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None, _error_test=None, _run_time=None):
     """
     Hidden function that is used by run_all_regression
     _error_test : (float) = None : if x_test = None, we set the test error to this value
@@ -253,10 +253,10 @@ def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_
     # We separate the train test data if asked of
     if isinstance(x_test, int):
         test_size = float(x_test)/x_train.shape[0]
-        x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size)
+        x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=seed)
     elif isinstance(x_test, float):
         test_size=x_test
-        x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size)
+        x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=seed)
     else:
         x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
     # We run the regression
@@ -356,7 +356,7 @@ def _verbose_show_proper(length, verbshow):
 
 
 
-def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None):
+def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None):
     """
     ********* Description *********
     Try several different regressions, and can show and verbose some of them
@@ -418,7 +418,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         if x_test is None:
             x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
         else:
-            x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size)
+            x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=seed)
         # We try over all regressions
         errors = []
         for ic, sho, verb, reg in zip(range(len(show)), show, verbose, regs):
@@ -429,12 +429,17 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         # In this section we follow the class selection_algo to perform the regressions tests
         selection_algo.set(n_arms=len(regs))
         arm = selection_algo.next_arm()
+        if seed is None:
+            sd = np.random.randint(1000000)
+        else:
+            sd = seed+0
         while (arm is not None):
             # We separate the train test data if asked of
+            n_draw = len(selection_algo.list_rewards[arm])
             if x_test is None:
                 x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
             else:
-                x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size)
+                x_tr, x_te, y_tr, y_te = train_test_split(x_train, y_train, test_size=test_size, random_state=sd+n_draw)
             tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex)
             selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
             arm = selection_algo.next_arm()

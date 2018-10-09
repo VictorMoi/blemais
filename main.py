@@ -147,10 +147,10 @@ def splitTestYear (x, y, year, nb_year=4, seed=0, n=0):
 
 
 
-#err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
-err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-# sel = Uniform_MAB(1, 370)
-# err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
+# err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
+#err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+sel = Uniform_MAB(1, 37)
+err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel, seed=3)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
@@ -167,3 +167,10 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
 
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
+
+from sklearn.preprocessing import PolynomialFeatures
+poly = PolynomialFeatures(2)#, interaction_only=True)
+poly.fit(x)
+xx = poly.transform(x)
+
+xx = np.concatenate([x, x*x], axis=1)
