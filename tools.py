@@ -114,8 +114,20 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     return x_train, x_test, y_train, y_test
 
 
+<<<<<<< HEAD
 def split_func_for_reg(x, y, year, test_size=0.1, random_state=0):
     if isinstance(test_size, float):
         return splitTestYear(x, y, year, nb_year=int(test_size*len(set(year))), seed=random_state, n=0)
     else:
         return splitTestYear(x, y, year, nb_year=test_size, seed=random_state, n=0)
+=======
+class split_func_for_reg:
+    def __init__(self, year):
+        self.year = year
+
+    def __call__(self, x, y, test_size=0.1, random_state=0):
+        if isinstance(test_size, float):
+            return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
+        else:
+            return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+>>>>>>> 112fb089f2808946b2eb1cc5adda067a17d713bb
