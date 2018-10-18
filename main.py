@@ -84,7 +84,7 @@ year = maize[:, 0]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 sel = Uniform_MAB(1, 37*1)
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg)
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
@@ -97,13 +97,13 @@ err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbo
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
-x = preprocessing.scale(maize[:, 2:])
-xind2name = ind2name[2:]
-xname2ind = name2ind
-for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
-    del xname2ind[ind2name[i]]
+# x = preprocessing.scale(maize[:, 2:])
+# xind2name = ind2name[2:]
+# xname2ind = name2ind
+# for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
+#     del xname2ind[ind2name[i]]
 
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 
 # from sklearn.preprocessing import PolynomialFeatures
