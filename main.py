@@ -135,7 +135,7 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
 year = maize[:, 0]
 
 def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
-    random.seed(seed)    
+    random.seed(seed)
     sel_year=np.array(list(set(year)))
     random.shuffle(sel_year)
     ind_test = np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
@@ -156,14 +156,16 @@ def split_func_for_reg(x, y, test_size=0.1, random_state=0):
 
 
 #err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
-err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+
 # sel = Uniform_MAB(1, 370)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 37*3)
-err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel, seed=3, split_func=split_func_for_reg)
+sel = Uniform_MAB(1, 37*1)
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
