@@ -84,14 +84,17 @@ def addVarAn(maize, ind2name, name2ind):
 def delVar(x, xind2name, xname2ind, name):
     if isinstance(name,list):
         for n in name:
-            x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[n]])),dtype=np.int)]
-        xind2name.remove(n)
-        del xname2ind[n]
+            x, xind2name, xname2ind = delVar(x, xind2name, xname2ind, n)
+            # x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[n]])),dtype=np.int)]
+            # xind2name.remove(n)
+            # del xname2ind[n]
     else:
-        x = x[:,np.array(list(set(range(x.shape[1]))-set(xname2ind[name])),dtype=np.int)]
+        x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[name]])),dtype=np.int)]
         xind2name.remove(name)
-        del xname2ind[name]
+        xname2ind = {j:i for i,j in enumerate(xind2name)}
+        # del xname2ind[name]
     return x, xind2name, xname2ind
+
 
 def selVar(x, xind2name, xname2ind, name):
     x = x[:,np.array([xname2ind[n] for n in name],dtype=np.int)]
@@ -101,7 +104,7 @@ def selVar(x, xind2name, xname2ind, name):
     
     
 def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
-    random.seed(seed)    
+    random.seed(seed)
     sel_year=np.array(list(set(year)))
     random.shuffle(sel_year)
     ind_test = np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
@@ -118,9 +121,17 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
 class split_func_for_reg:
     def __init__(self, year):
         self.year = year
+        # self.x = x
 
     def __call__(self, x, y, test_size=0.1, random_state=0):
+        # assert x.tolist() == self.x.tolist()
         if isinstance(test_size, float):
+            # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
             return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
         else:
+            # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
             return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+        print(len(list(set(x_train[:,0]))))
+        print(len(list(set(x_test[:,0]))))
+        return x_train, x_test, y_train, y_test
+

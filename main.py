@@ -67,9 +67,19 @@ y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 x = copy(maize_scaled)
 xind2name = copy(ind2name_scaled)
 xname2ind = copy(name2ind_scaled)
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest","yield_anomaly"])
+
+# mapping = {i[8] + i[7]:i[0] for i in x[:,:]}
+# mapping_y = {i[8] + i[7]:i[0] for i in x[:,:]}
+# yr = x[:,0]
+
+#x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest", "yield_anomaly"])
+
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "year_harvest")
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
+# aa = [mapping[i[5]+i[6]] for i in x[:,:]]
+# 1/0
 x_reduced = copy(maize_scaled)
 x_reducedind2name = copy(ind2name_scaled)
 x_reducedname2ind = copy(name2ind_scaled)
@@ -95,6 +105,7 @@ sel = Uniform_MAB(1, 37*1)
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
 
+
 # from sklearn.decomposition import PCA
 # pca = PCA(n_components=2)
 # pca.fit(x)
@@ -104,8 +115,10 @@ sel = Uniform_MAB(1, 37*1)
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
-#err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+# s = split_func_for_reg(year)
+
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=4, split_func=split_func_for_reg(year))
+#err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 # from sklearn.preprocessing import PolynomialFeatures
 # poly = PolynomialFeatures(2)#, interaction_only=True)
