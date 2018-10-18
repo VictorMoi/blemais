@@ -12,6 +12,7 @@ import os
 import sys
 import random
 from sklearn import preprocessing
+from copy import copy
 #import warnings
 #if os.name == 'posix':
 #    from sklearn.exceptions import ConvergenceWarning
@@ -57,20 +58,26 @@ maize, ind2name, name2ind = addVarAn(maize, ind2name, name2ind)
 # 3.3) creating other datasets from mai one (maize)
 
 maize_scaled = preprocessing.scale(maize)
-ind2name_scaled = ind2name
-name2ind_scaled = name2ind
+ind2name_scaled = copy(ind2name)
+name2ind_scaled = copy(name2ind)
 
 y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 
 
-x = maize_scaled
-xind2name = ind2name_scaled
-xname2ind = name2ind_scaled
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "year_harvest")
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
+x = copy(maize_scaled)
+xind2name = copy(ind2name_scaled)
+xname2ind = copy(name2ind_scaled)
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest","yield_anomaly"])
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
-year = maize[:, 0]
+x_reduced = copy(maize_scaled)
+x_reducedind2name = copy(ind2name_scaled)
+x_reducedname2ind = copy(name2ind_scaled)
+x_reduced,x_reducedind2name,x_reducedname2ind = delVar(x_reduced, x_reducedind2name, x_reducedname2ind, ["year_harvest","yield_anomaly"])
+sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9','Tm_5','Tm_6','Tm_7','Tm_8','Tm_9']
+x_reduced,x_reducedind2name,x_reducedname2ind = selVar(x_reduced, x_reducedind2name, x_reducedname2ind, sel1)
+
+year = maize[:, name2ind["year_harvest"]]
 
 #### 4) Runing regressions
 
@@ -95,14 +102,9 @@ err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, fi
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
-x = preprocessing.scale(maize[:, 2:])
-xind2name = ind2name[2:]
-xname2ind = name2ind
-for i in set(range(len(ind2name)))-set(range(2,len(ind2name))):
-    del xname2ind[ind2name[i]]
 
 err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-
+err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 # from sklearn.preprocessing import PolynomialFeatures
 # poly = PolynomialFeatures(2)#, interaction_only=True)

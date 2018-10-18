@@ -82,9 +82,21 @@ def addVarAn(maize, ind2name, name2ind):
 
 
 def delVar(x, xind2name, xname2ind, name):
-    x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[name]])),dtype=np.int)]
-    xind2name.remove(name)
-    del xname2ind[name]
+    if isinstance(name,list):
+        for n in name:
+            x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[n]])),dtype=np.int)]
+        xind2name.remove(n)
+        del xname2ind[n]
+    else:
+        x = x[:,np.array(list(set(range(x.shape[1]))-set(xname2ind[name])),dtype=np.int)]
+        xind2name.remove(name)
+        del xname2ind[name]
+    return x, xind2name, xname2ind
+
+def selVar(x, xind2name, xname2ind, name):
+    x = x[:,np.array([xname2ind[n] for n in name],dtype=np.int)]
+    xind2name = name
+    xname2ind = {n : xname2ind[n] for n in name}
     return x, xind2name, xname2ind
     
     
@@ -102,7 +114,7 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     return x_train, x_test, y_train, y_test
 
 
-def split_func_for_reg(x, y, test_size=0.1, random_state=0):
+def split_func_for_reg(x, y, year, test_size=0.1, random_state=0):
     if isinstance(test_size, float):
         return splitTestYear(x, y, year, nb_year=int(test_size*len(set(year))), seed=random_state, n=0)
     else:
