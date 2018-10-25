@@ -57,9 +57,23 @@ maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
 maize, ind2name, name2ind = addVarAn(maize, ind2name, name2ind)
 
 
+maize_squared = preprocessing.scale(maize)
+ind2name_squared = copy(ind2name)
+name2ind_squared = copy(name2ind)
+
+maize_squared = np.concatenate(maize_squared,maize_squared*maize_squared)
+maize_squaredind2name = maize_squaredind2name+[ n+"_sqrd" for n in maize_squaredind2name]
+maize_squaredname2ind = {j:i for i,j in enumerate(maize_squaredind2name)}
+
+maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "NUMD_sqrd")
+maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "yield_anomaly_sqrd")
+maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "year_harvest_sqrd")
+maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "IRR_sqrd")
+
 # 3.3) creating other datasets from mai one (maize)
 
 maize_scaled = preprocessing.scale(maize)
+maize_squared = preprocessing.scale(maize_squared)
 ind2name_scaled = copy(ind2name)
 name2ind_scaled = copy(name2ind)
 
@@ -82,13 +96,12 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
-x_squared = copy(x)
-x_squaredind2name = copy(xind2name)
+x_squared = copy(maize_squared)
+x_squaredind2name = copy(maize_squaredind2name)
 x_squaredname2ind = copy(xname2ind)
+x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "year_harvest")
+x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "yield_anomaly")
 
-x_squared = np.concatenate(x_squared,x_squared*x_squared)
-x_squaredind2name = x_squaredind2name+[ n+"_sqrd" for n in x_squaredind2name]
-x_squaredname2ind = {j:i for i,j in enumerate(x_squaredind2name)}
 
 # aa = [mapping[i[5]+i[6]] for i in x[:,:]]
 # 1/0
