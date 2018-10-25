@@ -136,4 +136,4 @@ err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbo
 # xx = np.concatenate([x, x*x], axis=1)
 
 
-x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])
+#x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])
