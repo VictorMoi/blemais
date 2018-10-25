@@ -61,8 +61,8 @@ maize_squared = copy(maize)
 ind2name_squared = copy(ind2name)
 name2ind_squared = copy(name2ind)
 
-maize_squared = np.concatenate(maize_squared,maize_squared*maize_squared, axis=1)
-maize_squaredind2name = maize_squaredind2name+[ n+"_sqrd" for n in ind2name]
+maize_squared = np.concatenate([maize_squared, maize_squared*maize_squared], axis=1)
+maize_squaredind2name = ind2name+[ n+"_sqrd" for n in ind2name]
 maize_squaredname2ind = {j:i for i,j in enumerate(maize_squaredind2name)}
 
 maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "NUMD_sqrd")
@@ -98,7 +98,7 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 
 x_squared = copy(maize_squared)
 x_squaredind2name = copy(maize_squaredind2name)
-x_squaredname2ind = copy(maize_squaredxname2ind)
+x_squaredname2ind = copy(maize_squaredname2ind)
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "year_harvest")
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "yield_anomaly")
 
@@ -125,7 +125,7 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 1)
+sel = Uniform_MAB(1, 12*5)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
@@ -145,7 +145,10 @@ sel = Uniform_MAB(1, 1)
 
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
 
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
+#err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
+
+
+err = run_all_regressions(x_squared, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
 
 
 y_pred = err[0]['reg'][1].predict(x)
