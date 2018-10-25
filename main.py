@@ -82,6 +82,14 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
+x_squared = copy(x)
+x_squaredind2name = copy(xind2name)
+x_squaredname2ind = copy(xname2ind)
+
+x_squared = np.concatenate(x_squared,x_squared*x_squared)
+x_squaredind2name = x_squaredind2name+[ n+"_sqrd" for n in x_squaredind2name]
+x_squaredname2ind = {j:i for i,j in enumerate(x_squaredind2name)}
+
 # aa = [mapping[i[5]+i[6]] for i in x[:,:]]
 # 1/0
 x_reduced = copy(maize_scaled)
@@ -133,6 +141,10 @@ xind2name+["yield_anomaly_real","yield_anomaly_SVR"]
 df = pd.DataFrame(export,columns = xind2name+["yield_anomaly_real","yield_anomaly_SVR"])
 df.to_csv(project_path+"/data/predict.csv")
 
+
+err = run_all_regressions(x_squared, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+
+
 #err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 # from sklearn.preprocessing import PolynomialFeatures
@@ -142,5 +154,5 @@ df.to_csv(project_path+"/data/predict.csv")
 
 # xx = np.concatenate([x, x*x], axis=1)
 
-
 #x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])
+
