@@ -34,6 +34,7 @@ from sklearn.decomposition import PCA
 
 
 
+
 regressions += [("PCA 20 + " + i[0], Pipeline([('PCA 20', PCA(n_components=20)), cp(i)])) for i in reg]
 
 regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)), cp(i)])) for i in reg]
