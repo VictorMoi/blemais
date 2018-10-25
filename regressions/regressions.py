@@ -20,11 +20,13 @@ from .includes import *
 
 # ChangeHere
 import warnings
-if os.name == 'posix':
+try:
     from sklearn.exceptions import DataConversionWarning, ConvergenceWarning
     warnings.filterwarnings("ignore", category=FutureWarning)
     warnings.filterwarnings("ignore", category=DataConversionWarning)
     warnings.filterwarnings("ignore", category=ConvergenceWarning)
+except ImportError:
+    pass
 
 
 if os.name != 'posix':
@@ -144,8 +146,21 @@ def get_regressions_from(s):
     It outputs the regressions defined
     """
     if (s[-3:] == ".py"):
-        with open(s) as f:
-            r = f.read()
+        if os.path.isfile(s):
+            with open(s) as f:
+                r = f.read()
+        else:
+            this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+            if os.path.isfile(os.path.join(this_file_path, s)):
+                with open(os.path.join(this_file_path, s)) as f:
+                    r = f.read()
+            else:
+                this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-2])
+                if os.path.isfile(os.path.join(this_file_path, s)):
+                    with open(os.path.join(this_file_path, s)) as f:
+                        r = f.read()
+                else:
+                    raise IOError("Error : no such file \"{}\"".format(s)) 
     else:
         r = s
     if (sys.version_info[0] == 2):
@@ -181,10 +196,16 @@ def get_regressions(n=0):
             if (n < 0):
                 regressions = [("Linear Regression", LinearRegression())]
             elif (n == 0): # ChangeHere
-                if os.name != 'posix':
-                    this_file_path = 'C:/Users/Victor/Documents/programmes/Github/blemais/regressions'
-                else:
-                    this_file_path = '/'.join(__file__.split('/')[:-1])
+                # if os.name != 'posix':
+                #     global project_path_regressions
+                #     this_file_path = project_path_regressions + ""
+                #     #this_file_path = 'C:/Users/Victor/Documents/programmes/Github/blemais/regressions'
+                # else:
+                #     this_file_path = '/'.join(__file__.split('/')[:-1])
+                # print(os.path.realpath(__file__))
+                # filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
+                # regressions = get_regressions_from(filename)
+                this_file_path = '/'.join(__file__.split('/')[:-1])
                 filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
                 regressions = get_regressions_from(filename)
                 # with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:

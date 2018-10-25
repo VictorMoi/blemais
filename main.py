@@ -1,4 +1,4 @@
-### Balbou et Victor
+### Alban et Totor
 
 # exec(open('C:/Users/Victor/Documents/programmes/Github/blemais/main.py').read())
 
@@ -19,12 +19,15 @@ from copy import copy
 #from sklearn.exceptions import FutureWarning
 
 # 1.2) need to change PATH here
+global project_path_regressions
 if os.name == 'posix':
     project_path = os.getcwd()
+    # project_path_regressions = os.path.join(project_path, "regressions")
 else:
     project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
     sys.path.append(project_path)
-    sys.path.append(project_path+'/regressions')
+    sys.path.append(os.path.join(project_path, "regressions"))
+    project_path_regressions = os.path.join(project_path, "regressions")
 
 # 1.3) import our homemade modules
 from tools import *
@@ -100,7 +103,7 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 37*1)
+sel = Uniform_MAB(1, 12*5)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
@@ -117,7 +120,13 @@ sel = Uniform_MAB(1, 37*1)
 
 # s = split_func_for_reg(year)
 
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=4, split_func=split_func_for_reg(year))
+
+#err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+
+
+
 #err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 # from sklearn.preprocessing import PolynomialFeatures
