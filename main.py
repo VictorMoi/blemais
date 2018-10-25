@@ -61,8 +61,8 @@ maize_squared = copy(maize)
 ind2name_squared = copy(ind2name)
 name2ind_squared = copy(name2ind)
 
-maize_squared = np.concatenate(maize_squared,maize_squared*maize_squared)
-maize_squaredind2name = maize_squaredind2name+[ n+"_sqrd" for n in maize_squaredind2name]
+maize_squared = np.concatenate([maize_squared,maize_squared*maize_squared],axis=1)
+maize_squaredind2name = ind2name+[ n+"_sqrd" for n in ind2name]
 maize_squaredname2ind = {j:i for i,j in enumerate(maize_squaredind2name)}
 
 maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "NUMD_sqrd")
@@ -98,7 +98,7 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 
 x_squared = copy(maize_squared)
 x_squaredind2name = copy(maize_squaredind2name)
-x_squaredname2ind = copy(xname2ind)
+x_squaredname2ind = copy(maize_squaredname2ind)
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "year_harvest")
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "yield_anomaly")
 
