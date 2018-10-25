@@ -57,7 +57,7 @@ maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
 maize, ind2name, name2ind = addVarAn(maize, ind2name, name2ind)
 
 
-maize_squared = preprocessing.scale(maize)
+maize_squared = copy(maize)
 ind2name_squared = copy(ind2name)
 name2ind_squared = copy(name2ind)
 
