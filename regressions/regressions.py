@@ -20,11 +20,13 @@ from .includes import *
 
 # ChangeHere
 import warnings
-if os.name == 'posix':
+try:
     from sklearn.exceptions import DataConversionWarning, ConvergenceWarning
     warnings.filterwarnings("ignore", category=FutureWarning)
     warnings.filterwarnings("ignore", category=DataConversionWarning)
     warnings.filterwarnings("ignore", category=ConvergenceWarning)
+except ImportError:
+    pass
 
 
 if os.name != 'posix':
@@ -144,8 +146,21 @@ def get_regressions_from(s):
     It outputs the regressions defined
     """
     if (s[-3:] == ".py"):
-        with open(s) as f:
-            r = f.read()
+        if os.path.isfile(s):
+            with open(s) as f:
+                r = f.read()
+        else:
+            this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+            if os.path.isfile(os.path.join(this_file_path, s)):
+                with open(os.path.join(this_file_path, s)) as f:
+                    r = f.read()
+            else:
+                this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-2])
+                if os.path.isfile(os.path.join(this_file_path, s)):
+                    with open(os.path.join(this_file_path, s)) as f:
+                        r = f.read()
+                else:
+                    raise IOError("Error : no such file \"{}\"".format(s)) 
     else:
         r = s
     if (sys.version_info[0] == 2):
@@ -181,10 +196,16 @@ def get_regressions(n=0):
             if (n < 0):
                 regressions = [("Linear Regression", LinearRegression())]
             elif (n == 0): # ChangeHere
-                if os.name != 'posix':
-                    this_file_path = 'C:/Users/Victor/Documents/programmes/Github/blemais/regressions'
-                else:
-                    this_file_path = '/'.join(__file__.split('/')[:-1])
+                # if os.name != 'posix':
+                #     global project_path_regressions
+                #     this_file_path = project_path_regressions + ""
+                #     #this_file_path = 'C:/Users/Victor/Documents/programmes/Github/blemais/regressions'
+                # else:
+                #     this_file_path = '/'.join(__file__.split('/')[:-1])
+                # print(os.path.realpath(__file__))
+                # filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
+                # regressions = get_regressions_from(filename)
+                this_file_path = '/'.join(__file__.split('/')[:-1])
                 filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
                 regressions = get_regressions_from(filename)
                 # with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:
@@ -202,6 +223,8 @@ def get_regressions(n=0):
             #     regressions = _execute_regression_file(n)
         else:
             regressions = []
+    except KeyboardInterrupt:
+        raise
     except:
         print("Error while loading a list of regressions, the error is likely to be in the argument n")
         raise
@@ -209,7 +232,7 @@ def get_regressions(n=0):
 
 
 
-def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None):
+def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None, debug=False):
     """
     ********* Description *********
     Fit and return the error of one regression
@@ -227,6 +250,7 @@ def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_t
     verbose : (bool) = True : whether we print the regression error
     show : (bool) = True : whether we plot the regression
     i : (str) or (int) : the index of this regression, generally used by run_all_regressions
+    debug : (bool) = False : if True it stops the algorithm on first regression error and show message
     ********* Return *********
     (error_train, error_test, running_time)
     (None, None, None) if it somehow failed
@@ -238,11 +262,11 @@ def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_t
     error_train, error_test, run_time = run_one_regression(x, y, reg, show=False, verbose=False)
     error_train, error_test, run_time = run_one_regression(x, y, reg, i=666)
     """
-    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i, seed=seed)
+    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i, seed=see, debug=debug)
 
 
 
-def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None, _error_test=None, _run_time=None):
+def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_test=None, y_test=None, verbose=True, show=True, i="", seed=None, debug=False, _error_test=None, _run_time=None):
     """
     Hidden function that is used by run_all_regression
     _error_test : (float) = None : if x_test = None, we set the test error to this value
@@ -281,15 +305,21 @@ def _run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_
         if verbose:
             t = _repr_verbose(i, name, error_train, error_test, run_time)
             print(t)
-    except ValueError:
-        print("Kernel failed with the data provided : {}".format(name))
-        return (None, None, None)
-    except AttributeError:
-        return (None, None, None)
     except KeyboardInterrupt:
         raise
+    except ValueError:
+        print("Kernel failed with the data provided : {}".format(name))
+        if debug:
+            raise
+        return (None, None, None)
+    except AttributeError:
+        if debug:
+            raise
+        return (None, None, None)
     except:
         print("Kernel failed : {}".format(name))
+        if debug:
+            raise
         return (None, None, None)
     return (error_train, error_test, run_time)
 
@@ -356,7 +386,7 @@ def _verbose_show_proper(length, verbshow):
 
 
 
-def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None, split_func=train_test_split):
+def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None, split_func=train_test_split, debug=False):
     """
     ********* Description *********
     Try several different regressions, and can show and verbose some of them
@@ -423,7 +453,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         errors = []
         for ic, sho, verb, reg in zip(range(len(show)), show, verbose, regs):
             nbr_ex += 1
-            tr, te, ti = _run_one_regression(x_tr, y_tr, reg, error_func, x_te, y_te, verbose=verb, show=sho, i=ic)
+            tr, te, ti = _run_one_regression(x_tr, y_tr, reg, error_func, x_te, y_te, verbose=verb, show=sho, i=ic, debug=debug)
             errors.append({"i":ic, "error_train":tr, "error_test":te, "reg":reg, "time":ti})
     else:
         # In this section we follow the class selection_algo to perform the regressions tests
@@ -440,7 +470,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
                 x_tr, x_te, y_tr, y_te = (x_train, x_test, y_train, y_test)
             else:
                 x_tr, x_te, y_tr, y_te = split_func(x_train, y_train, test_size=test_size, random_state=sd+n_draw)
-            tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex)
+            tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex, debug=debug)
             selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
             arm = selection_algo.next_arm()
             nbr_ex += 1
@@ -469,7 +499,7 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
         errors_sorted = sorted(errors_sorted, key=sort_key)
         for ic, ss, sho, verb in zip(range(len(final_show)), errors_sorted, final_show, final_verbose):
              if verb or sho:
-                 _run_one_regression(x_train, y_train, ss["reg"], error_func, verbose=verb, show=sho, i=ic, _error_test=ss["error_test"], _run_time=ss["time"])
+                 _run_one_regression(x_train, y_train, ss["reg"], error_func, verbose=verb, show=sho, i=ic, debug=debug, _error_test=ss["error_test"], _run_time=ss["time"])
     return errors
 
 

@@ -1,4 +1,4 @@
-### Balbou et Victor
+### Alban et Totor
 
 # exec(open('C:/Users/Victor/Documents/programmes/Github/blemais/main.py').read())
 
@@ -19,12 +19,15 @@ from copy import copy
 #from sklearn.exceptions import FutureWarning
 
 # 1.2) need to change PATH here
+global project_path_regressions
 if os.name == 'posix':
     project_path = os.getcwd()
+    # project_path_regressions = os.path.join(project_path, "regressions")
 else:
     project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
     sys.path.append(project_path)
-    sys.path.append(project_path+'/regressions')
+    sys.path.append(os.path.join(project_path, "regressions"))
+    project_path_regressions = os.path.join(project_path, "regressions")
 
 # 1.3) import our homemade modules
 from tools import *
@@ -67,12 +70,21 @@ y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 x = copy(maize_scaled)
 xind2name = copy(ind2name_scaled)
 xname2ind = copy(name2ind_scaled)
-x = copy(maize)
-xind2name = copy(ind2name)
-xname2ind = copy(name2ind)
-x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest","yield_anomaly"])
+
+
+# mapping = {i[8] + i[7]:i[0] for i in x[:,:]}
+# mapping_y = {i[8] + i[7]:i[0] for i in x[:,:]}
+# yr = x[:,0]
+
+#x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest", "yield_anomaly"])
+
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "year_harvest")
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
+
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
+# aa = [mapping[i[5]+i[6]] for i in x[:,:]]
+# 1/0
 x_reduced = copy(maize_scaled)
 x_reducedind2name = copy(ind2name_scaled)
 x_reducedname2ind = copy(name2ind_scaled)
@@ -93,9 +105,10 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 37*1)
+sel = Uniform_MAB(1, 12*1)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
+
 
 
 # from sklearn.decomposition import PCA
@@ -107,9 +120,22 @@ sel = Uniform_MAB(1, 37*1)
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
+<<<<<<< HEAD
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 #err = run_all_regressions(x_reduced, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+=======
+# s = split_func_for_reg(year)
+
+
+#err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+
+
+
+#err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+>>>>>>> 64ecdfd7413b2cb0bdb75ba077fc7a37594f825f
 
 # from sklearn.preprocessing import PolynomialFeatures
 # poly = PolynomialFeatures(2)#, interaction_only=True)
