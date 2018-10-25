@@ -98,7 +98,7 @@ x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
 
 x_squared = copy(maize_squared)
 x_squaredind2name = copy(maize_squaredind2name)
-x_squaredname2ind = copy(xname2ind)
+x_squaredname2ind = copy(maize_squaredxname2ind)
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "year_harvest")
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "yield_anomaly")
 
