@@ -67,6 +67,9 @@ y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 x = copy(maize_scaled)
 xind2name = copy(ind2name_scaled)
 xname2ind = copy(name2ind_scaled)
+x = copy(maize)
+xind2name = copy(ind2name)
+xname2ind = copy(name2ind)
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, ["year_harvest","yield_anomaly"])
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
@@ -106,6 +109,7 @@ sel = Uniform_MAB(1, 37*1)
 
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
+#err = run_all_regressions(x_reduced, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
 # from sklearn.preprocessing import PolynomialFeatures
 # poly = PolynomialFeatures(2)#, interaction_only=True)
@@ -113,3 +117,6 @@ err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Githu
 # xx = poly.transform(x)
 
 # xx = np.concatenate([x, x*x], axis=1)
+
+
+x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])

@@ -85,10 +85,10 @@ def delVar(x, xind2name, xname2ind, name):
     if isinstance(name,list):
         for n in name:
             x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[n]])),dtype=np.int)]
-        xind2name.remove(n)
-        del xname2ind[n]
+            xind2name.remove(n)
+            del xname2ind[n]
     else:
-        x = x[:,np.array(list(set(range(x.shape[1]))-set(xname2ind[name])),dtype=np.int)]
+        x = x[:,np.array(list(set(range(x.shape[1]))-set([xname2ind[name]])),dtype=np.int)]
         xind2name.remove(name)
         del xname2ind[name]
     return x, xind2name, xname2ind

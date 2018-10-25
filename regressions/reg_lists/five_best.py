@@ -15,13 +15,13 @@ from sklearn.feature_selection import RFECV
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import SelectFromModel
 from sklearn.feature_selection import f_regression
-from sklearn.feature_selection import mutual_info_regression
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import SelectPercentile
-from sklearn.feature_selection import SelectFpr
-from sklearn.feature_selection import SelectFdr
-from sklearn.feature_selection import SelectFwe
-from sklearn.feature_selection import GenericUnivariateSelect
+#from sklearn.feature_selection import mutual_info_regression
+#from sklearn.feature_selection import SelectKBest
+#from sklearn.feature_selection import SelectPercentile
+#from sklearn.feature_selection import SelectFpr
+#from sklearn.feature_selection import SelectFdr
+#from sklearn.feature_selection import SelectFwe
+#from sklearn.feature_selection import GenericUnivariateSelect
 from sklearn.pipeline import Pipeline
 
 # regressions += [("RFE + " + i[0], Pipeline([('RFE', RFE(estimator=i[1])), i])) for i in regressions]
