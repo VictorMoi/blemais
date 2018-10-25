@@ -120,13 +120,6 @@ sel = Uniform_MAB(1, 12*1)
 # [(round(a[1,i],3), ind2name[i]) for i in ia]
 # plt.plot(a[:,ia].transpose())
 
-<<<<<<< HEAD
-#err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-#err = run_all_regressions(x_reduced, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-=======
-# s = split_func_for_reg(year)
-
 
 #err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
 
@@ -135,7 +128,6 @@ err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbo
 
 
 #err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
->>>>>>> 64ecdfd7413b2cb0bdb75ba077fc7a37594f825f
 
 # from sklearn.preprocessing import PolynomialFeatures
 # poly = PolynomialFeatures(2)#, interaction_only=True)
