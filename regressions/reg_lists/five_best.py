@@ -1,11 +1,15 @@
+# reg = [
+
+#     ("SVR", SVR()),
+#     ("Kernel Ridge RBF", Regression_With_Custom_Kernel(KernelRidge(), RBF())),
+#     ("Kernel Ridge Cauchy", Regression_With_Custom_Kernel(KernelRidge(), Cauchy())),
+#     ("Kernel Ridge Tanimoto", Regression_With_Custom_Kernel(KernelRidge(), Tanimoto()))
+# ]
+
 reg = [
 
     ("SVR", SVR()),
-    ("Kernel Ridge RBF", Regression_With_Custom_Kernel(KernelRidge(), RBF())),
-    ("Kernel Ridge Cauchy", Regression_With_Custom_Kernel(KernelRidge(), Cauchy())),
-    ("Kernel Ridge Tanimoto", Regression_With_Custom_Kernel(KernelRidge(), Tanimoto()))
 ]
-
 
 
 regressions = [] + reg
@@ -35,9 +39,9 @@ from sklearn.decomposition import PCA
 
 
 
-regressions += [("PCA 20 + " + i[0], Pipeline([('PCA 20', PCA(n_components=20)), cp(i)])) for i in reg]
+# regressions += [("PCA 20 + " + i[0], Pipeline([('PCA 20', PCA(n_components=20)), cp(i)])) for i in reg]
 
-regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)), cp(i)])) for i in reg]
+# regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)), cp(i)])) for i in reg]
 
 # regressions += [("RFE + " + i[0], Pipeline([('RFE', RFE(estimator=i[1])), i])) for i in reg]
 
