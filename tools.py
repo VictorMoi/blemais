@@ -127,10 +127,12 @@ class split_func_for_reg:
         # assert x.tolist() == self.x.tolist()
         if isinstance(test_size, float):
             # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
-            return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
+            # return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
+            return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=int(random_state*test_size), n=random_state)
         else:
             # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
-            return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+            # return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+            return splitTestYear(x, y, self.year, nb_year=test_size, seed=int(random_state*test_size), n=random_state - int(random_state*test_size)*int(1/test_size))
         print(len(list(set(x_train[:,0]))))
         print(len(list(set(x_test[:,0]))))
         return x_train, x_test, y_train, y_test
