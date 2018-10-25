@@ -272,7 +272,7 @@ def run_one_regression(x_train, y_train, reg, error_func=mean_squared_error, x_t
     error_train, error_test, run_time = run_one_regression(x, y, reg, show=False, verbose=False)
     error_train, error_test, run_time = run_one_regression(x, y, reg, i=666)
     """
-    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i, seed=see, debug=debug)
+    return _run_one_regression(x_train, y_train, reg, error_func=error_func, x_test=x_test, y_test=y_test, verbose=verbose, show=show, i=i, seed=seed, debug=debug)
 
 
 

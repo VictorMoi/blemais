@@ -86,7 +86,7 @@ x_squared = copy(x)
 x_squaredind2name = copy(xind2name)
 x_squaredname2ind = copy(xname2ind)
 
-x_squared = np.concatenate(x_squared,x_squared*x_squared)
+x_squared = np.concatenate([x_squared,x_squared*x_squared], axis=1)
 x_squaredind2name = x_squaredind2name+[ n+"_sqrd" for n in x_squaredind2name]
 x_squaredname2ind = {j:i for i,j in enumerate(x_squaredind2name)}
 
@@ -112,7 +112,7 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 50)
+sel = Uniform_MAB(1, 1)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
@@ -142,7 +142,7 @@ df = pd.DataFrame(export,columns = xind2name+["yield_anomaly_real","yield_anomal
 df.to_csv(project_path+"/data/predict.csv")
 
 
-err = run_all_regressions(x_squared, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
+#err = run_all_regressions(x_squared, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
 
 
 #err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
