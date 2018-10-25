@@ -112,7 +112,7 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 12*1)
+sel = Uniform_MAB(1, 50)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
@@ -133,6 +133,7 @@ sel = Uniform_MAB(1, 12*1)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=5, split_func=split_func_for_reg(year))
 
 err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
+
 
 y_pred = err[0]['reg'][1].predict(x)
 
