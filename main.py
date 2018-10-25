@@ -129,7 +129,7 @@ y_pred = err[0]['reg'][1].predict(x)
 export = np.column_stack((x,y,y_pred))
 xind2name+["yield_anomaly_real","yield_anomaly_SVR"]
 df = pd.DataFrame(export,columns = xind2name+["yield_anomaly_real","yield_anomaly_SVR"])
-df.to_csv("")
+df.to_csv(project_path+"/data/predict.csv")
 
 #err = run_all_regressions(x, y, regs="C:/Users/Victor/Documents/programmes/Github/blemais/regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
 
