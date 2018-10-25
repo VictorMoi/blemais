@@ -34,30 +34,7 @@ from sklearn.decomposition import PCA
 
 
 
-<<<<<<< HEAD
-#regressions += [("PCA 20 + " + i[0], Pipeline([('PCA 20', PCA(n_components=20)), i])) for i in reg]
 
-#regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)), i])) for i in reg]
-#
-#regressions += [("RFE + " + i[0], Pipeline([('RFE', RFE(estimator=i[1])), i])) for i in reg]
-#
-#regressions += [("RFECV + " + i[0], Pipeline([('RFECV', RFECV(estimator=i[1])), i])) for i in reg]
-#
-#regressions += [("Var Thresh + " + i[0], Pipeline([('Var Thresh', VarianceThreshold(threshold=0.1)), i])) for i in reg]
-#
-#regressions += [("Select + " + i[0], Pipeline([('Select', SelectFromModel(estimator=i[1])), i])) for i in reg]
-#
-#regressions += [("Select K best + " + i[0], Pipeline([('Select K best', SelectKBest(f_regression, k=2)), i])) for i in reg]
-#
-#regressions += [("Select Percentile + " + i[0], Pipeline([('Select Percentile', SelectPercentile(f_regression, percentile=30)), i])) for i in reg]
-#
-#regressions += [("Select fpr + " + i[0], Pipeline([('Select fpr', SelectFpr(f_regression, alpha=0.3)), i])) for i in reg]
-#
-#regressions += [("Select fdr + " + i[0], Pipeline([('Select fdr', SelectFdr(f_regression, alpha=0.3)), i])) for i in reg]
-#
-#regressions += [("Select fwe + " + i[0], Pipeline([('Select fwe', SelectFwe(f_regression, alpha=0.3)), i])) for i in reg]
-#
-=======
 regressions += [("PCA 20 + " + i[0], Pipeline([('PCA 20', PCA(n_components=20)), cp(i)])) for i in reg]
 
 regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)), cp(i)])) for i in reg]
@@ -80,5 +57,4 @@ regressions += [("PCA 10 + " + i[0], Pipeline([('PCA 10', PCA(n_components=10)),
 
 # regressions += [("Select fwe + " + i[0], Pipeline([('Select fwe', SelectFwe(f_regression, alpha=0.3)), i])) for i in reg]
 
->>>>>>> 2bc492a03d37dced06109c97141615b62a4ea989
 
