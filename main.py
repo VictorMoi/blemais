@@ -19,7 +19,6 @@ from copy import copy
 #from sklearn.exceptions import FutureWarning
 
 # 1.2) need to change PATH here
-global project_path_regressions
 if os.name == 'posix':
     project_path = os.getcwd()
     # project_path_regressions = os.path.join(project_path, "regressions")

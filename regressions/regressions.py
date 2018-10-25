@@ -150,12 +150,18 @@ def get_regressions_from(s):
             with open(s) as f:
                 r = f.read()
         else:
-            this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+            if os.name != 'posix':
+                this_file_path = '\\'.join(os.path.realpath(__file__).split('\\')[:-1])
+            else:
+                this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-1])
             if os.path.isfile(os.path.join(this_file_path, s)):
                 with open(os.path.join(this_file_path, s)) as f:
                     r = f.read()
             else:
-                this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-2])
+                if os.name != 'posix':
+                    this_file_path = '\\'.join(os.path.realpath(__file__).split('\\')[:-2])
+                else:
+                    this_file_path = '/'.join(os.path.realpath(__file__).split('/')[:-2])
                 if os.path.isfile(os.path.join(this_file_path, s)):
                     with open(os.path.join(this_file_path, s)) as f:
                         r = f.read()
@@ -205,8 +211,12 @@ def get_regressions(n=0):
                 # print(os.path.realpath(__file__))
                 # filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
                 # regressions = get_regressions_from(filename)
-                this_file_path = '/'.join(__file__.split('/')[:-1])
-                filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
+                if os.name != 'posix':
+                    this_file_path = '\\'.join(__file__.split('\\')[:-1])
+                    filename = os.path.join(this_file_path, "reg_lists\\one_of_each.py")
+                else:
+                    this_file_path = '/'.join(__file__.split('/')[:-1])
+                    filename = os.path.join(this_file_path, "reg_lists/one_of_each.py")
                 regressions = get_regressions_from(filename)
                 # with open(os.path.join(this_file_path, "reg_lists/one_of_each.py")) as f:
                 #     r = f.read()

@@ -27,6 +27,64 @@ class Regression_With_Custom_Kernel:
 
 
 
+# class Regression_With_Custom_Kernel2:
+#     """
+#     Class for syntax convenience when defining custom kernels
+#     """
+#     def __new__(cls, reg_class, kernel, *reg_args, **reg_kargs):
+#         return reg_class.__new__(*reg_args, **reg_kargs)
+
+    
+#     def __init__(self, reg_class, kernel, *reg_args, **reg_kargs):
+#         """
+#         reg : the scikit learn regression
+#         kernel : the custom kernel to use
+#         """
+#         reg_class.__init__(self, *reg_args, **reg_kargs)
+#         #self.reg = reg
+#         #self.kernel = kernel
+#         #self.reg.set_params(kernel="precomputed")
+        
+#     def fit(self, x, y, *args, **kargs):
+#         mat = self.kernel(x, x)
+#         self.x = x
+#         #self.reg.set_params(kernel_params=mat)
+#         return self.reg.fit(mat, y, *args, **kargs)
+
+#     def predict(self, x, *args, **kargs):
+#         mat = self.kernel(x, self.x)
+#         #self.reg.set_params(kernel_params=mat)
+#         return self.reg.predict(mat, *args, **kargs)
+
+
+# def reg_init(selff, kernel, *reg_args, **reg_kargs):
+#     """
+#     reg : the scikit learn regression
+#     kernel : the custom kernel to use
+#     """
+#     #reg_class.__init__(self, *reg_args, **reg_kargs)
+#     #self.reg = reg
+#     super(selff).__init__(selff)
+#     selff.kkernel = kernel
+#     selff.set_params(kernel="precomputed")
+    
+# def reg_fit(selff, x, y, *args, **kargs):
+#     mat = selff.kkernel(x, x)
+#     selff.x = x
+#     #self.reg.set_params(kernel_params=mat)
+#     return super(selff).fit(mat, y, *args, **kargs)
+
+# def reg_predict(selff, x, *args, **kargs):
+#     mat = selff.kkernel(x, selff.x)
+#     #self.reg.set_params(kernel_params=mat)
+#     return super(selff).predict(mat, *args, **kargs)
+
+
+# methods = {"__init__" : reg_init, "fit" : reg_fit, "predict" : reg_predict}
+# Kernell = type("Kernell", (KernelRidge,), methods)
+# Kernell(RBF())
+
+
 class Empty_Regression:
     """
     Class for defining regressions in case they can't be imported
