@@ -9,6 +9,7 @@ from sklearn import preprocessing
 import os
 import sys
 import time
+from copy import deepcopy as cp
 try:
     from collections.abc import Iterable
 except ImportError:
@@ -396,7 +397,7 @@ def _verbose_show_proper(length, verbshow):
 
 
 
-def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None, split_func=train_test_split, debug=False):
+def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error, x_test=None, y_test=None, selection_algo=None, verbose=True, show=False, final_verbose=range(10), final_show=False, sort_key=None, seed=None, split_func=train_test_split, debug=False, save_all_fit_regs=False):
     """
     ********* Description *********
     Try several different regressions, and can show and verbose some of them
@@ -481,7 +482,10 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
             else:
                 x_tr, x_te, y_tr, y_te = split_func(x_train, y_train, test_size=test_size, random_state=sd+n_draw)
             tr, te, ti = _run_one_regression(x_tr, y_tr, regs[arm], error_func, x_te, y_te, verbose[arm], show[arm], i=nbr_ex, debug=debug)
-            selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
+            if save_all_fit_regs:
+                selection_algo.update_reward(te, arm=arm, other_data=(tr, ti, sd+n_draw, cp(regs[arm])))
+            else:
+                selection_algo.update_reward(te, arm=arm, other_data=(tr, ti))
             arm = selection_algo.next_arm()
             nbr_ex += 1
         errors = []
@@ -497,7 +501,12 @@ def run_all_regressions(x_train, y_train, regs=0, error_func=mean_squared_error,
                 mean_err_ti = np.mean(ti)
             else:
                 mean_err_ti = None
-            errors.append({"i":ic, "error_train":mean_err_tr, "error_test":te, "reg":reg, "time":mean_err_ti})
+            if save_all_fit_regs:
+                nd = [j[2] for j in tri]
+                rg = [j[3] for j in tri]
+                errors.append({"i":ic, "error_train":mean_err_tr, "error_test":te, "reg":reg, "seeds":nd, "regs":rg, "time":mean_err_ti})
+            else:
+                errors.append({"i":ic, "error_train":mean_err_tr, "error_test":te, "reg":reg, "time":mean_err_ti})
     # Now we have finished the tests of the regressions
     # We print the final results obtained
     final_show = _verbose_show_proper(nbr_ex, final_show)
