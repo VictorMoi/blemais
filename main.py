@@ -125,7 +125,7 @@ year = maize[:, name2ind["year_harvest"]]
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(15),selection_algo=sel)
 # err = run_all_regressions(x, y, regs=0, verbose=True, show=False, x_test=0.1, final_verbose=range(5))
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/features.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15))
-sel = Uniform_MAB(1, 3)#12*5)
+sel = Uniform_MAB(1, 1)#12*5)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(15), selection_algo=sel, seed=3, split_func=split_func_for_reg(year))
 # err = run_all_regressions(x, y, regs=[SVR()], verbose=True, show=False, x_test=0.1,selection_algo=sel)
 
@@ -172,4 +172,9 @@ df.to_csv(project_path+"/data/predict.csv")
 # xx = np.concatenate([x, x*x], axis=1)
 
 #x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])
+
+
+
+
+
 

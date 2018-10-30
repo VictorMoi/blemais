@@ -1,5 +1,12 @@
+import os
 import time
 import numpy as np
+try:
+    import signal
+    class TimeoutException(Exception): pass
+except ImportError:
+    signal = None
+
 
 
 class Uniform_MAB:
@@ -9,38 +16,73 @@ class Uniform_MAB:
     The list of rewards is in self.list_rewards and the mean of rewards is in self.mean_rewards
     The list of other data stored is in self.other_data
     """
-    
 
-    def __init__(self, n_arms=1, n_max=-1, time_max=-1):
+
+    def __init__(self, n_arms=1, repeat_max=-1, n_max=-1, time_max=-1, arm_timeout=-1, timeout_reward=None, timeout_other_data="reset_default"):
         """
         n_arms : (int) = 1 : the number of arms
-        n_max : (int) = -1 : maximum number of arms pulled
+        repeat_max : (int) = -1 : stops when one arm is pulled more times than repeat_max
+        n_max : (int) = -1 : stops when the total number of arms pulled is over n_max
         time_max : (float) = -1 : maximum time between setting this instance and the last arm pulled
         You can define these attributes later with the function set
-        Before pulling arms, n_arms must be defined, and either n_max or time_max must be defined
+        Before pulling arms, n_arms must be defined, and also either repeat_max or n_max or time_max
         """
         self.n_arms = None
+        self.repeat_max = None
         self.n_max = None
         self.time_max = None
-        self.set(n_arms, n_max, time_max)
+        self.arm_timeout = None
+        self.timeout_reward = 0
+        self.timeout_other_data = None
+        self._handler = None
+        self.set(n_arms, repeat_max, n_max, time_max, arm_timeout, timeout_reward, timeout_other_data)
 
 
-        
-    def set(self, n_arms=-1, n_max=-1, time_max=-1):
+
+    def set(self, n_arms=-1, repeat_max=-1, n_max=-1, time_max=-1, arm_timeout=-1, timeout_reward=None, timeout_other_data="reset_default"):
         """
         Set the inner parameters of this MAB class
-        n_arms : (int) = -1 : the number of arms
-        n_max : (int) = -1 : maximum number of arms pulled
+        By default, it only adds contraints, set the arg to None to reset it
+        n_arms : (int) = 1 : the number of arms
+        repeat_max : (int) = -1 : stops when one arm is pulled more times than repeat_max
+        n_max : (int) = -1 : stops when the total number of arms pulled is over n_max
         time_max : (float) = -1 : maximum time between setting this instance and the last arm pulled
-        You can define these attributes later by using this same function
-        Before pulling arms, n_arms must be defined, and either n_max or time_max must be defined
+        You can define these attributes later with the function set
+        Before pulling arms, n_arms must be defined, and also either repeat_max or n_max or time_max
         """
-        if (n_arms is not None) and (n_arms > 0):
+        if (n_arms is None) or (n_arms > 0):
             self.n_arms = n_arms
+        elif (n_arms != -1):
+            print("MAB Warning : incorrect value for n_arms")
+        if (repeat_max is None) or (repeat_max > 0):
+            self.repeat_max = repeat_max
+        elif (repeat_max != -1):
+            print("MAB Warning : incorrect value for repeat_max")
         if (n_max is None) or (n_max > 0):
             self.n_max = n_max
+        elif (n_max != -1):
+            print("MAB Warning : incorrect value for n_max")
         if (time_max is None) or (time_max > 0):
             self.time_max = time_max
+        elif (time_max != -1):
+            print("MAB Warning : incorrect value for time_max")
+        if (arm_timeout is None) or (arm_timeout > 0):
+            if (signal is None):
+                print("MAB Warning : cannot set arm_timeout, no module signal")
+            elif (os.name != "posix"):
+                print("MAB Warning : cannot set arm_timeout, it only works on linux")
+            else:
+                self.arm_timeout = arm_timeout
+        elif (arm_timeout != -1):
+            print("MAB Warning : incorrect value for arm_timeout")
+        if (timeout_reward is None):
+            self.timeout_reward = 0
+        else:
+            self.timeout_reward = timeout_reward
+        if (timeout_other_data == "reset_default"):
+            self.timeout_other_data = None
+        else:
+            self.timeout_other_data = timeout_other_data
         if (self.n_arms is None):
             self.n_arms = 1
         self.list_next = range(self.n_arms)
@@ -49,9 +91,9 @@ class Uniform_MAB:
         self.list_rewards = [[] for i in range(self.n_arms)]
         self.mean_rewards = [0 for i in range(self.n_arms)]
         self.other_data = [[] for i in range(self.n_arms)]
-        
 
-        
+
+
     def next_arm(self):
         """
         Return the arm index of the next arm that should be pulled
@@ -63,10 +105,15 @@ class Uniform_MAB:
             return None
         if (self.time_max is not None) and (time.time() - self.time >= self.time_max):
             return None
-        return self._next_arm()
+        na = self._next_arm()
+        if (self.repeat_max is not None) and (len(self.list_rewards[na]) >= self.repeat_max):
+            return None
+        else:
+            return na
 
 
-    
+
+
     def _next_arm(self):
         """
         You should use "next_arm" instead
@@ -87,7 +134,7 @@ class Uniform_MAB:
         self._next_arm()
         self.list_next = self.list_next[1:]
 
-    
+
 
     def update_reward(self, reward, arm=None, other_data=None):
         """
@@ -98,7 +145,7 @@ class Uniform_MAB:
         """
         if arm is None:
             arm = self._next_arm()
-        self.list_next = self.list_next[1:]
+        self.skip_arm()
         self.n += 1
         self.list_rewards[arm].append(reward)
         if (reward is None):
@@ -106,4 +153,76 @@ class Uniform_MAB:
         elif (self.mean_rewards[arm] is not None):
             self.mean_rewards[arm] = np.mean(self.list_rewards[arm])
         self.other_data[arm].append(other_data)
+
+
+    def _set_handler(self):
+        if (self._handler is None):
+            def _handler(signum, frame):
+                raise TimeoutException
+            self._handler = _handler
+            signal.signal(signal.SIGALRM, self._handler)
+
+
+    def init_timeout(self):
+        if (self.arm_timeout is None):
+            print("Warning : cannot set timeout")
+        else:
+            self._set_handler()
+            signal.alarm(self.arm_timeout)
+
+
+    def stop_timeout(self):
+        if (self.arm_timeout is not None):
+            signal.alarm(0)
+
+
+    def pull(self, reward_function, *args, **kargs):
+        """
+        Pull one arm
+        reward_function takes the index of the arm as first argument, and then *args and **kargs
+        it returns only the reward
+        """
+        arm = self.next_arm()
+        if arm is None:
+            return False
+        if (self.arm_timeout is None):
+            reward = reward_function(arm, *args, **kargs)
+            self.update_reward(reward, arm)
+            return True
+        else:
+            self._set_handler()
+            signal.alarm(self.arm_timeout)
+            try:
+                reward = reward_function(arm, *args, **kargs)
+                signal.alarm(0)
+            except TimeoutException:
+                reward = self.timeout_reward
+            self.update_reward(reward, arm)
+            return True
+
+
+    def pull_and_save_other_data(self, reward_function, *args, **kargs):
+        """
+        Pull one arm
+        reward_function takes the index of the arm as first argument, and then *args and **kargs
+        it returns (reward, other_data)
+        """
+        arm = self.next_arm()
+        if arm is None:
+            return False
+        if (self.arm_timeout is None):
+            reward, other_data = reward_function(arm, *args, **kargs)
+            self.update_reward(reward, arm, other_data)
+            return True
+        else:
+            self._set_handler()
+            signal.alarm(self.arm_timeout)
+            try:
+                reward, other_data = reward_function(arm, *args, **kargs)
+                signal.alarm(0)
+            except TimeoutException:
+                reward = self.timeout_reward
+                other_data = self.timeout_other_data
+            self.update_reward(reward, arm, other_data)
+            return True
         
