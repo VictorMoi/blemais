@@ -118,6 +118,26 @@ sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9
 x_reduced,x_reducedind2name,x_reducedname2ind = selVar(x_reduced, x_reducedind2name, x_reducedname2ind, sel1)
 
 
+x_lobell = copy(x_squared)
+x_lobellind2name = copy(x_squaredind2name)
+x_lobellname2ind = copy(x_squaredname2ind)
+sel_lobell = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd']
+x_lobell,x_lobellind2name,x_lobellname2ind = selVar(x_lobell2, x_lobellind2name, x_lobell2name2ind, sel_lobell)
+
+x_lobell2 = copy(x_squared)
+x_lobell2ind2name = copy(x_squaredind2name)
+x_lobell2name2ind = copy(x_squaredname2ind)
+sel_lobell2 = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd','DE_4_9','DE_4_9_sqrd']
+x_lobell2,x_lobell2ind2name,x_lobell2name2ind = selVar(x_lobell2, x_lobellind2name, x_lobell2name2ind, sel_lobell2)
+
+x_an = copy(x_squared)
+x_anind2name = copy(x_squaredind2name)
+x_anname2ind = copy(x_squaredname2ind)
+sel_an = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd','DE_4_9','DE_4_9_sqrd','RV_4_9','RV_4_9_sqrd']
+x_an,x_anind2name,x_anname2ind = selVar(x_an, x_anind2name, x_anname2ind, sel_an)
+
+
+
 x_year = copy(x)
 xind2name_year = copy(xind2name)
 xname2ind_year = copy(xname2ind)
