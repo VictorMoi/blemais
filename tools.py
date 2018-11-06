@@ -118,8 +118,8 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
 
 
 
-def aggregateData(x, y, year, var):
-    
+#def aggregateData(x, y, year, var):
+
 
 class split_func_for_reg:
     def __init__(self, year):

@@ -212,11 +212,12 @@ import sklearn
 # x = xx
 
 
-x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
+#x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
 
 
-sel = Uniform_MAB(1, 3)
-err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+sel = Uniform_MAB(1, 1)
+#err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+err = run_all_regressions(x_year, y_year, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True)
 1/0
 
 
