@@ -81,7 +81,7 @@ y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 
 
 year = maize[:, name2ind["year_harvest"]]
-
+dep = maize[:, name2ind["NUMD"]]
 
 x = copy(maize_scaled)
 xind2name = copy(ind2name_scaled)
@@ -118,29 +118,29 @@ sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9
 x_reduced,x_reducedind2name,x_reducedname2ind = selVar(x_reduced, x_reducedind2name, x_reducedname2ind, sel1)
 
 
-x_dep = copy(x)
-xind2name_dep = copy(xind2name)
-xname2ind_dep = copy(xname2ind)
-mat_year = np.repeat(x_dep[:, xname2ind_dep["NUMD"]][:,np.newaxis],94,axis=1)
-mat_year = mat_year == np.unique(x_dep[:, xname2ind_dep["NUMD"]])
+x_year = copy(x)
+xind2name_year = copy(xind2name)
+xname2ind_year = copy(xname2ind)
+year[:,np.newaxis].shape
+mat_year = np.repeat(year[:,np.newaxis],np.unique(year).shape[0],axis=1)
+mat_year.shape
+mat_year = mat_year == np.unique(year[:,np.newaxis])
 mat_year = mat_year.T
 #mat_year.shape
-np.sum(mat_year,axis = 1)[:,np.newaxis].shape
+#np.sum(mat_year,axis = 1)[:,np.newaxis].shape
+#np.sum(mat_year,axis = 1)
 mat_year = mat_year/(np.sum(mat_year,axis = 1)[:,np.newaxis])
-dep = np.unique(x_dep[:, xname2ind_dep["NUMD"]][np.newaxis,:])
-x_dep = mat_year.dot(x_dep)
-x_dep,xind2name_dep,xname2ind_dep = delVar(x_dep, xind2name_dep, xname2ind_dep, ["NUMD"])
+x_year = mat_year.dot(x_year)
 
 #x_dep.shape
 #x.shape
 #x_dep
 
+y_year = copy(y)
+y_year = mat_year.dot(y_year)
 
-y_dep = copy(y)
-y_dep = mat_year.dot(y_dep)
-
-year_dep = copy(year)
-year_dep = mat_year.dot(year_dep)
+year_year = copy(year)
+year_year = mat_year.dot(year_year)
 
 
 #### 4) Runing regressions
@@ -346,6 +346,7 @@ df.to_csv(project_path+"/data/predict.csv")
 #x=np.array([[0,1,2,3,4,5,6],[7,8,9,10,11,12,13]])
 
 
+err = run_all_regressions(x_year, y_year, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=5, split_func=split_func_for_reg(year_year))
 
 
 
