@@ -80,6 +80,9 @@ name2ind_scaled = copy(name2ind)
 y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
 
 
+year = maize[:, name2ind["year_harvest"]]
+
+
 x = copy(maize_scaled)
 xind2name = copy(ind2name_scaled)
 xname2ind = copy(name2ind_scaled)
@@ -93,6 +96,8 @@ xname2ind = copy(name2ind_scaled)
 
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "year_harvest")
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
+
+
 
 #x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "IRR")
 
@@ -112,7 +117,31 @@ x_reduced,x_reducedind2name,x_reducedname2ind = delVar(x_reduced, x_reducedind2n
 sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9','Tm_5','Tm_6','Tm_7','Tm_8','Tm_9']
 x_reduced,x_reducedind2name,x_reducedname2ind = selVar(x_reduced, x_reducedind2name, x_reducedname2ind, sel1)
 
-year = maize[:, name2ind["year_harvest"]]
+
+x_dep = copy(x)
+xind2name_dep = copy(xind2name)
+xname2ind_dep = copy(xname2ind)
+mat_year = np.repeat(x_dep[:, xname2ind_dep["NUMD"]][:,np.newaxis],94,axis=1)
+mat_year = mat_year == np.unique(x_dep[:, xname2ind_dep["NUMD"]])
+mat_year = mat_year.T
+#mat_year.shape
+np.sum(mat_year,axis = 1)[:,np.newaxis].shape
+mat_year = mat_year/(np.sum(mat_year,axis = 1)[:,np.newaxis])
+dep = np.unique(x_dep[:, xname2ind_dep["NUMD"]][np.newaxis,:])
+x_dep = mat_year.dot(x_dep)
+x_dep,xind2name_dep,xname2ind_dep = delVar(x_dep, xind2name_dep, xname2ind_dep, ["NUMD"])
+
+#x_dep.shape
+#x.shape
+#x_dep
+
+
+y_dep = copy(y)
+y_dep = mat_year.dot(y_dep)
+
+year_dep = copy(year)
+year_dep = mat_year.dot(year_dep)
+
 
 #### 4) Runing regressions
 
