@@ -132,7 +132,7 @@ mat_year = mat_year.T
 mat_year = mat_year/(np.sum(mat_year,axis = 1)[:,np.newaxis])
 x_year = mat_year.dot(x_year)
 
-#x_dep.shape
+#x_year.shape
 #x.shape
 #x_dep
 
