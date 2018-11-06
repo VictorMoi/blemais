@@ -148,7 +148,74 @@ sel = Uniform_MAB(1, 1)#12*5)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
 
 
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=None, split_func=split_func_for_reg(year), save_all_fit_regs=True)
+s = split_func_for_reg(year)
+x_train, x_test, y_train, y_test = s(x, y)
+
+x = x_train
+y = y_train
+
+import sklearn
+d = sklearn.metrics.pairwise.euclidean_distances(x_train, x_test)
+
+means = []
+for i,v in enumerate(x_test):
+    ind = np.argsort(d[:,i])
+    means += [  np.mean(y_train[ind[1:4]])  ]
+
+np.mean((y_test - means)**2)
+
+
+# a = sorted(range(d.shape[0]), key=lambda x:np.sum(d[x,:]))
+# x1 = x[a,:]
+# y1 = y[a]
+# d1 = d[a,:][:,a]
+# year1 = year[a]
+
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=None, save_all_fit_regs=True)
+
+reg = err[0]['reg'][1]
+
+c = 0+reg.coef_
+c = c/np.linalg.norm(c)
+xx = np.dot(x, np.diag(c))
+xx_test = np.dot(x_test, np.diag(c))
+dd = sklearn.metrics.pairwise.euclidean_distances(xx, xx)
+
+means = []
+for i,v in enumerate(xx_test):
+    ind = np.argsort(dd[:,i])
+    means += [  np.mean(y_train[ind[1:4]])  ]
+
+np.mean((y_test - means)**2)
+
+
+
+
+1/0
+dd = sklearn.metrics.pairwise.euclidean_distances(xx, xx)
+aa = sorted(range(dd.shape[0]), key=lambda x:np.sum(dd[x,:]))
+dd1 = dd[aa,:][:,aa]
+yy1 = y[aa]
+y1 = np.repeat(yy1[:,np.newaxis], 3394, axis=1)
+y2 = np.repeat(yy1[np.newaxis,:], 3394, axis=0)
+yy2 = y1 - y2
+
+points = [(i,j) for i,j in zip(yy2.flatten(),dd1.flatten())]
+
+points_x = yy2.flatten()
+points_y = dd1.flatten()
+
+
+
+
+for b in np.unique(year):
+    print(b)
+    x2 = x[year==b,:]
+    y2 = y[year==b]
+    err = run_all_regressions(x2, y2, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=None, save_all_fit_regs=True)
+
+
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=range(4), selection_algo=sel, seed=None, split_func=split_func_for_reg(year), save_all_fit_regs=True)
 
 
 y_pred = err[0]['reg'][1].predict(x)
