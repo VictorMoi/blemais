@@ -130,6 +130,11 @@ x_lobell2name2ind = copy(x_squaredname2ind)
 sel_lobell2 = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd','DE_4_9','DE_4_9_sqrd']
 x_lobell2,x_lobell2ind2name,x_lobell2name2ind = selVar(x_lobell2, x_lobellind2name, x_lobell2name2ind, sel_lobell2)
 
+x_an = copy(x_squared)
+x_anind2name = copy(x_squaredind2name)
+x_anname2ind = copy(x_squaredname2ind)
+sel_an = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd','DE_4_9','DE_4_9_sqrd','RV_4_9','RV_4_9_sqrd']
+x_an,x_anind2name,x_anname2ind = selVar(x_an, x_anind2name, x_anname2ind, sel_an)
 
 
 
