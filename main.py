@@ -148,21 +148,21 @@ sel = Uniform_MAB(1, 1)#12*5)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, split_func=split_func_for_reg(year))
 
 
-s = split_func_for_reg(year)
-x_train, x_test, y_train, y_test = s(x, y)
+# s = split_func_for_reg(year)
+# x_train, x_test, y_train, y_test = s(x, y)
 
-x = x_train
-y = y_train
+# x = x_train
+# y = y_train
 
 import sklearn
-d = sklearn.metrics.pairwise.euclidean_distances(x_train, x_test)
+# d = sklearn.metrics.pairwise.euclidean_distances(x_train, x_test)
 
-means = []
-for i,v in enumerate(x_test):
-    ind = np.argsort(d[:,i])
-    means += [  np.mean(y_train[ind[1:4]])  ]
+# means = []
+# for i,v in enumerate(x_test):
+#     ind = np.argsort(d[:,i])
+#     means += [  np.mean(y_train[ind[1:4]])  ]
 
-np.mean((y_test - means)**2)
+# np.mean((y_test - means)**2)
 
 
 # a = sorted(range(d.shape[0]), key=lambda x:np.sum(d[x,:]))
@@ -171,13 +171,88 @@ np.mean((y_test - means)**2)
 # d1 = d[a,:][:,a]
 # year1 = year[a]
 
-err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=None, save_all_fit_regs=True)
 
-reg = err[0]['reg'][1]
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 
-c = 0+reg.coef_
-c = c/np.linalg.norm(c)
-xx = np.dot(x, np.diag(c))
+# reg = err[0]['reg'][1]
+
+# c = 0+reg.coef_
+# c = c/np.linalg.norm(c)
+# xx = np.dot(x, np.diag(c))
+
+# x = xx
+
+
+
+
+
+
+
+
+
+d = sklearn.metrics.pairwise.euclidean_distances(x, x)
+a = sorted(range(d.shape[0]), key=lambda x:np.sum(d[x,:]))
+x = x[a,:]
+y = y[a]
+year = year[a]
+
+
+a = np.argsort(year)
+x = x[a,:]
+y = y[a]
+
+d = sklearn.metrics.pairwise.euclidean_distances(x, x)
+plt.imshow(d)
+plt.show()
+1/0
+colors = 'bkrgmc'
+
+for i,c in enumerate(colors):
+    years = list(set(year))
+    indexes = (year == years[i])
+    iindexes = (year != years[i])
+
+    xx = x[indexes]
+    xxi = x[iindexes]    
+    yy = y[indexes]
+    yyi = y[iindexes]
+    
+    d = sklearn.metrics.pairwise.euclidean_distances(xx, xxi)
+    
+    y1 = np.repeat(yy[:,np.newaxis], yy.shape[0], axis=1)
+    y2 = np.repeat(yy[np.newaxis,:], yy.shape[0], axis=0)
+    yy = y1 - y2
+    
+    indexes = np.concatenate([np.ones(20000), np.zeros(3394**2)])[:yy.shape[0]**2]
+    np.random.shuffle(indexes)
+    indexes = indexes == 1
+    
+    p_x = yy.flatten()[indexes]
+    p_y = d.flatten()[indexes]
+    
+    plt.scatter(p_x, p_y, s=1, c=c)
+plt.show()
+
+
+1/0
+
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+
+# reg = err[0]['reg'][1]
+
+# c = 0+reg.coef_
+# c = c/np.linalg.norm(c)
+# xx = np.dot(x, np.diag(c))
+
+# x = xx
+
+
+sel = Uniform_MAB(1, 3)
+err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+
+
+1/0
+
 xx_test = np.dot(x_test, np.diag(c))
 dd = sklearn.metrics.pairwise.euclidean_distances(xx, xx)
 
