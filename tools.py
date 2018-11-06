@@ -77,6 +77,7 @@ def addVarAn(maize, ind2name, name2ind):
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "Tm_4_9", (maize[:,name2ind["Tm_4"]] + maize[:,name2ind["Tm_5"]] + maize[:,name2ind["Tm_6"]]+maize[:,name2ind["Tm_7"]] + maize[:,name2ind["Tm_8"]] + maize[:,name2ind["Tm_9"]])/6)
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "PR_4_9", (maize[:,name2ind["PR_4"]] + maize[:,name2ind["PR_5"]] + maize[:,name2ind["PR_6"]]+maize[:,name2ind["PR_7"]] + maize[:,name2ind["PR_8"]] + maize[:,name2ind["PR_9"]]))
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "RV_4_9", (maize[:,name2ind["Tm_4"]] + maize[:,name2ind["RV_5"]] + maize[:,name2ind["RV_6"]]+maize[:,name2ind["RV_7"]] + maize[:,name2ind["RV_8"]] + maize[:,name2ind["RV_9"]]))
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "DE_4_9", (maize[:,name2ind["DE_4"]] + maize[:,name2ind["DE_5"]] + maize[:,name2ind["DE_6"]]+maize[:,name2ind["DE_7"]] + maize[:,name2ind["DE_8"]] + maize[:,name2ind["DE_9"]]))
     return maize, ind2name, name2ind
 
 
