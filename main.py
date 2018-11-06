@@ -129,7 +129,7 @@ mat_year = mat_year.T
 #mat_year.shape
 #np.sum(mat_year,axis = 1)[:,np.newaxis].shape
 #np.sum(mat_year,axis = 1)
-mat_year = mat_year/(np.sum(mat_year,axis = 1)[:,np.newaxis])
+mat_year = mat_year.astype(float)/(np.sum(mat_year,axis = 1)[:,np.newaxis])
 x_year = mat_year.dot(x_year)
 
 #x_dep.shape
@@ -214,8 +214,10 @@ import sklearn
 
 #x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
 
+split_func_for_reg_2(year, year_year)
 
-sel = Uniform_MAB(1, 1)
+1/0
+sel = Uniform_MAB(1, 10)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 err = run_all_regressions(x_year, y_year, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True)
 1/0

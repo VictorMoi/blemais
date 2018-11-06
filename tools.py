@@ -117,6 +117,20 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     return x_train, x_test, y_train, y_test
 
 
+def splitTestYear2(x, y, year, nb_year=4, seed=0, n=0):
+    random.seed(seed)
+    sel_year=np.array(list(set(year)))
+    random.shuffle(sel_year)
+    ind_test = np.array(np.array(range(n*nb_year,n*nb_year+nb_year))%(len(sel_year)),dtype=np.int)
+    year_test = sel_year[ind_test]
+    year_train = np.array(list(set(sel_year) - set(year_test)),dtype=np.int)
+    x_test = x[np.asarray([(i in year_test) for i in year]),:]
+    y_test = y[np.asarray([(i in year_test) for i in year])]
+    x_train = x[np.asarray([(i in year_train) for i in year]),:]
+    y_train = y[np.asarray([(i in year_train) for i in year])]
+    return x_train, x_test, y_train, y_test, year_train, year_test
+
+
 
 #def aggregateData(x, y, year, var):
 
@@ -136,6 +150,33 @@ class split_func_for_reg:
             # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
             # return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
             return splitTestYear(x, y, self.year, nb_year=test_size, seed=int(random_state*test_size), n=random_state - int(random_state*test_size)*int(1/test_size))
+        print(len(list(set(x_train[:,0]))))
+        print(len(list(set(x_test[:,0]))))
+        return x_train, x_test, y_train, y_test
+
+
+class split_func_for_reg_2:
+    def __init__(self, year, year_year):
+        self.year = year
+        self.year_year = year_year
+        # self.x = x
+
+    def __call__(self, x, y, x_year, y_year, test_size=0.1, random_state=0):
+        # assert x.tolist() == self.x.tolist()
+        if isinstance(test_size, float):
+            # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
+            # return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
+            x_train_, x_test, y_train_, y_test, year_train, year_test = splitTestYear2(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=int(random_state*test_size), n=random_state)
+        else:
+            # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+            # return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
+            x_train_, x_test, y_train_, y_test, year_train, year_test = splitTestYear2(x, y, self.year, nb_year=test_size, seed=int(random_state*test_size), n=random_state - int(random_state*test_size)*int(1/test_size))
+        
+        x_test_ = x_year[np.asarray([(i in year_test) for i in self.year_year.astype(int)]),:]
+        y_test_ = y_year[np.asarray([(i in year_test) for i in self.year_year.astype(int)])]
+        x_train = x_year[np.asarray([(i in year_train) for i in self.year_year.astype(int)]),:]
+        y_train = y_year[np.asarray([(i in year_train) for i in self.year_year.astype(int)])]
+    
         print(len(list(set(x_train[:,0]))))
         print(len(list(set(x_test[:,0]))))
         return x_train, x_test, y_train, y_test
