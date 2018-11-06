@@ -110,12 +110,22 @@ x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2n
 
 # aa = [mapping[i[5]+i[6]] for i in x[:,:]]
 # 1/0
-x_reduced = copy(maize_scaled)
-x_reducedind2name = copy(ind2name_scaled)
+x_reduced = copy(maize_squared)
+x_reducedind2name = copy(maize_squaredind2name)
 x_reducedname2ind = copy(name2ind_scaled)
 x_reduced,x_reducedind2name,x_reducedname2ind = delVar(x_reduced, x_reducedind2name, x_reducedname2ind, ["year_harvest","yield_anomaly"])
 sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9','Tm_5','Tm_6','Tm_7','Tm_8','Tm_9']
 x_reduced,x_reducedind2name,x_reducedname2ind = selVar(x_reduced, x_reducedind2name, x_reducedname2ind, sel1)
+
+
+x_lobell = copy(x_squared)
+x_lobellind2name = copy(x_squaredind2name)
+x_lobellname2ind = copy(x_squaredname2ind)
+sel_lobell = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd']
+x_lobell,x_lobellind2name,x_lobellname2ind = selVar(x_lobell, x_lobellind2name, x_lobellname2ind, sel_lobell)
+
+
+
 
 
 x_year = copy(x)
