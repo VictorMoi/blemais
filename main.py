@@ -141,6 +141,7 @@ y_year = mat_year.dot(y_year)
 
 year_year = copy(year)
 year_year = mat_year.dot(year_year)
+year_year = np.asarray([int(round(i)) for i in year_year])
 
 
 #### 4) Runing regressions
@@ -201,7 +202,7 @@ import sklearn
 # year1 = year[a]
 
 
-# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, xx_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 
 # reg = err[0]['reg'][1]
 
@@ -214,12 +215,12 @@ import sklearn
 
 #x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
 
-split_func_for_reg_2(year, year_year)
+s = split_func_for_reg_2(year)
 
-1/0
-sel = Uniform_MAB(1, 10)
+
+sel = Uniform_MAB(1, 3)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
-err = run_all_regressions(x_year, y_year, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True)
+err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 1/0
 
 

@@ -156,13 +156,41 @@ class split_func_for_reg:
 
 
 class split_func_for_reg_2:
-    def __init__(self, year, year_year):
+    def __init__(self, year):
         self.year = year
-        self.year_year = year_year
+        # self.year_year = year_year
         # self.x = x
 
-    def __call__(self, x, y, x_year, y_year, test_size=0.1, random_state=0):
+    def __call__(self, x, y, test_size=0.1, random_state=0):
         # assert x.tolist() == self.x.tolist()
+
+        from copy import copy
+        x_year = copy(x)
+        # xind2name_year = copy(xind2name)
+        # xname2ind_year = copy(xname2ind)
+        self.year[:,np.newaxis].shape
+        mat_year = np.repeat(self.year[:,np.newaxis],np.unique(self.year).shape[0],axis=1)
+        mat_year.shape
+        mat_year = mat_year == np.unique(self.year[:,np.newaxis])
+        mat_year = mat_year.T
+        #mat_year.shape
+        #np.sum(mat_year,axis = 1)[:,np.newaxis].shape
+        #np.sum(mat_year,axis = 1)
+        mat_year = mat_year.astype(float)/(np.sum(mat_year,axis = 1)[:,np.newaxis])
+        x_year = mat_year.dot(x_year)
+        
+        #x_dep.shape
+        #x.shape
+        #x_dep
+        
+        y_year = copy(y)
+        y_year = mat_year.dot(y_year)
+        
+        year_year = copy(self.year)
+        year_year = mat_year.dot(year_year)
+        year_year = np.asarray([int(round(i)) for i in year_year])
+
+        
         if isinstance(test_size, float):
             # x_train, x_test, y_train, y_test = splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
             # return splitTestYear(x, y, self.year, nb_year=int(test_size*len(set(self.year))), seed=random_state, n=0)
@@ -172,12 +200,12 @@ class split_func_for_reg_2:
             # return splitTestYear(x, y, self.year, nb_year=test_size, seed=random_state, n=0)
             x_train_, x_test, y_train_, y_test, year_train, year_test = splitTestYear2(x, y, self.year, nb_year=test_size, seed=int(random_state*test_size), n=random_state - int(random_state*test_size)*int(1/test_size))
         
-        x_test_ = x_year[np.asarray([(i in year_test) for i in self.year_year.astype(int)]),:]
-        y_test_ = y_year[np.asarray([(i in year_test) for i in self.year_year.astype(int)])]
-        x_train = x_year[np.asarray([(i in year_train) for i in self.year_year.astype(int)]),:]
-        y_train = y_year[np.asarray([(i in year_train) for i in self.year_year.astype(int)])]
+        x_test_ = x_year[np.asarray([(i in year_test) for i in year_year]),:]
+        y_test_ = y_year[np.asarray([(i in year_test) for i in year_year])]
+        x_train = x_year[np.asarray([(i in year_train) for i in year_year]),:]
+        y_train = y_year[np.asarray([(i in year_train) for i in year_year])]
     
-        print(len(list(set(x_train[:,0]))))
-        print(len(list(set(x_test[:,0]))))
+        # print(len(list(set(x_train[:,0]))))
+        # print(len(list(set(x_test[:,0]))))
         return x_train, x_test, y_train, y_test
 
