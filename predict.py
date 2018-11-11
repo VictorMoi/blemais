@@ -151,3 +151,7 @@ xind2name_test == xind2name_train
 y_test_s = reg.predict(x_test_s)
 
 y_test = scaler_y.inverse_transform(y_test_s[:,np.newaxis])[:,0]
+
+#### 6. Export data
+
+y_test.T
