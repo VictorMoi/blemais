@@ -1,3 +1,4 @@
+blocks/*
 data/*
 rapport/rapport.aux
 rapport/rapport.log
@@ -5,6 +6,7 @@ rapport/rapport.out
 rapport/rapport.pdf
 rapport/rapport.synctex.gz
 rapport/rapport.toc
+rapport/missfont.log
 pykernels/*
 features_selection/*
 kernels/tests*
