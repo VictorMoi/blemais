@@ -12,6 +12,12 @@ hist(wheat$PR_1)
 
 hist(maize$yield_anomaly)
 
+mean(maize$yield_anomaly)
+
+sd(maize$yield_anomaly)
+
+
+
 colnames(maize)
 
 ggplot()+

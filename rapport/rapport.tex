@@ -1,0 +1,308 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,french,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[round]{natbib}
+\usepackage[french]{babel}
+\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm,ignoreall]{geometry}
+\usepackage[colorlinks=true,citecolor=blue, linkcolor=black,bookmarks={true},pdfstartview=]{hyperref}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{Times}
+\usepackage[sfdefault]{arimo}
+\usepackage[T1]{fontenc}
+\pdfmapfile{+arimo.map}
+%\usepackage{amssymb}
+%\usepackage{siunitx}
+%\usepackage{enumitem} %if french: \frenchbsetup{StandardLists=true}
+%\frenchbsetup{StandardLists=true}
+%\usepackage{times}
+%\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage[explicit]{titlesec}
+\usepackage{tcolorbox}
+\usepackage{pdfpages}
+\usepackage[]{subcaption}%pour les subfigure
+%\usepackage[section]{placeins}%empeche les flottant de sortir de leur section. penser aussi à utiliser \clearpage et \FloatBarrier
+\usepackage{placeins}
+%\usepackage{caption}
+%\usepackage{setspace}
+%\renewcommand*\rmdefault{ppl}
+%\renewcommand*\rmdefault{pbk}%non
+%\renewcommand*\rmdefault{bch}%moins que ppl
+%\renewcommand*\rmdefault{ptm}
+%\renewcommand*\rmdefault{phv}% à voir...
+%\renewcommand*\rmdefault{pag}%non
+%%%%%%%%%%%%%%%%%%%%%% paramètres %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy %sinon : \fusy
+
+
+%%%%%%%%%%%%%%%%%%%%%%% commandes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\arraystretch}{1.5}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+%
+%\DeclareRobustCommand{\mysection}[1]{
+%{\section*{#1}}
+%\addcontentsline{toc}{section}{#1}
+%\phantomsection
+%}
+
+
+
+\newcommand{\down}[1]{$_{\text{#1}}$}
+
+\newcommand{\CP}{(LERFoB)}
+\newcommand{\IKS}{(IKS)}
+\newcommand{\CPIKS}{(IKS et LERFoB)}
+\newcommand{\degC}{$^{\circ}$C}
+\newcommand{\Tmoyan}{Tmoy\down{an}}%$_{\text{an}}$}
+\newcommand{\DEete}{DE\down{été}}
+
+
+
+\definecolor{ColorTitre}{RGB}{120,170,250}
+\definecolor{ColorSub}{RGB}{3,38,97}
+
+
+\hypersetup{citecolor=ColorSub,urlcolor=ColorSub}
+\urlstyle{same}
+
+%\let\citepold\citep
+%\renewcommand{\citep}[1]{\textbf{\citepold{#1}}}
+%\let\citetold\citet
+%\renewcommand{\citet}[1]{\textbf{\citetold{#1}}}
+
+\tcbset{
+    frame code={}
+    center title,
+    left=0pt,
+    right=0pt,
+    top=1pt,
+    bottom=0pt,
+    colback=ColorTitre,
+    colframe=white,
+    width=\dimexpr\textwidth\relax,
+    enlarge left by=0mm,
+    boxsep=5pt,
+    arc=0pt,outer arc=0pt,
+    }
+
+%\let\mybf\bfseries
+%\renewcommand{\bfseries}{\mybf\color{ColorSub}}
+
+%\let\mytextbf\textbf
+%\renewcommand{\textbf}[1]{\textcolor{ColorSub}{\mytextbf{#1}}}
+
+\newlength{\lengthzero}
+\setlength{\lengthzero}{0em}
+\titleformat{\section}{\bfseries\Large}{}{\lengthzero}{\begin{tcolorbox}\color{white}#1\end{tcolorbox}}
+\titleformat{\subsection}{\bfseries\large}{}{\lengthzero}{\color{ColorSub}#1}
+\titleformat{\subsubsection}{\itshape\normalsize}{}{\lengthzero}{#1}
+\titleformat{\subsubsection}{\bfseries\normalsize}{}{\lengthzero}{\color{ColorTitre}#1}
+
+
+\let\mysection\section
+\DeclareRobustCommand{\section*}[1]{
+%~\\[\parskip]
+%\clearpage
+\floatbarrier
+\mysection*{\phantomsection #1}
+\addcontentsline{toc}{section}{#1}
+%\makeatletter
+%\def\@currentlabelname{#1}
+%\makeatother
+}
+
+%\renewcommand{\tableofcontents}{
+%\mysection*{Table des matières}
+%\makeatletter
+%\@starttoc{toc}
+%\makeatother
+%\thispagestyle{empty}
+%\newpage
+%}
+
+\let\mysubsection\subsection
+\DeclareRobustCommand{\subsection*}[1]{
+%~\\[\parskip]
+\FloatBarrier
+\mysubsection*{\phantomsection #1}
+\addcontentsline{toc}{subsection}{#1}
+%\makeatletter
+%\def\@currentlabelname{#1}
+%\makeatother
+}
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%% commandes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\refname}{Bibliographie}
+\renewcommand{\tablename}{Tableau}
+
+\newcounter{save}
+\newcounter{numphoto}
+\setcounter{numphoto}{\thefigure}
+\newenvironment{photo}
+{
+\renewcommand{\figurename}{Picture}
+\setcounter{save}{\thefigure}
+\setcounter{figure}{\thenumphoto}
+\begin{figure}[!hbt]
+}
+{
+\end{figure}
+\renewcommand{\figurename}{Figure}
+\addtocounter{numphoto}{1}
+\setcounter{figure}{\thesave}
+}
+
+\pagestyle{plain}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% corps %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%TOC
+\pagenumbering{roman}
+\setcounter{page}{1}
+\pagestyle{empty}
+\tableofcontents
+
+
+%\mysection*{Table des matières}
+%\phantomsection
+%\makeatletter
+%\@starttoc{toc}
+%\makeatother
+
+\hypersetup{linkcolor=ColorSub}
+
+\pagestyle{plain}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+Crop Data Challenge - Victor Moinard et Alban Pierre
+\end{center}
+
+\section*{Participants et concours}
+
+Ce travail a été co-réalisé par:
+\begin{description}
+\item [Victor Moinard] Doctorant à l'UMR INRA - APT ECOSYS depuis septembre 2018
+\item[Alban Pierre] Étudiant en informatique en quatrième année à l'École Normale Supérieur
+\end{description}
+
+Nous concourons au Crop Data Challenge dans la section "Maïs".
+
+\section*{Description du modèle retenu}
+
+\subsection*{Langage et packages}
+
+Nous avons développé notre modèle en utilisant python 3. 
+
+Les packages "numpy", "panda", et "matplotlib" ont été utilisés pour la manipulation des données. Les packages "sklearn" et "pykernel' ont été utilisé pour implémenter les modèles de prédiction.
+
+\subsection*{Variables utilisées}
+
+Les variables utilisées sont toutes celles fournies :
+\begin{itemize}
+\item ETP\_1 à ETP\_9
+\item PR\_1 à PR\_9
+\item RV\_1 à RV\_9
+\item SeqPR\_1 à SeqPR\_9
+\item Tn\_1 à Tn\_9
+\item Tx\_1 à Tx\_9
+\item IRR
+\end{itemize}
+
+On considère que la variable IRR peut être traité comme une variable quantitative continue.
+
+Toutes les variables sont centrées et réduites, ce qui facilite les fonctionnement des modèles développés dans le package sklearn.
+
+La variable réponse du modèle est la variable "yield\_anomay", centrée réduite. 
+
+
+\subsection*{Nature du modèle}
+
+L'algorithme utilisé est le modèle "Kernel Tanimoto" du package pykernel.
+
+Il s'agit d'une méthode de prédiction par noyau, utilisant le noyau de Tanimoto. Ce noyau a à l'origine été utilisé en chimie pour en analyse moléculaire.
+
+\subsection*{Estimation a priori du RMSE}
+
+Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,74.
+
+
+
+\section*{Recherches et développement du modèle}
+
+Durant nos recherches, nous avons calibrés de nombreux modèles pour vous présenter celui fournissant es meilleurs résultats \textit{a priori}. Pour chaque modèle calibré, nous avons estimé une valeur de RMSE \textit{a priori} à l'aide de cross validation.
+
+\subsection*{Sélection du meilleur modèle}
+
+Nous calibrons chaque modèle sur 35 années "train", et nous le testons sur 3 années "test". Cette démarche est réalisée plusieurs fois (en général 10), et on compare le RMSE moyen. Le modèle présenté ci-dessus est le meilleur que nous ayons trouvé. Néanmoins, d'autres modèles ne sont pas significativement moins performant: une procédure par noyau avec les noyau de Cauchy ou RBF, et une méthode  par Support Vector Machne (SVR) serait d'aussi bons candidats.
+
+\subsection*{Tests de modèles}
+
+De multiples modèles (linéaires, procédure par noyau, arbre de décisions...) ont été calibrés. Les efforts se sont ensuite concentrés sur les 4 meilleurs modèles décrits ci-dessus.
+
+\subsection*{Tests des variables}
+
+L'ajout de nouvelles variables (obtenues par combinaison de celles fournies) a été essayé. Ces variables sont:
+\begin{enumerate}
+\item[Température moyenne] $Tm\_i = \frac{Tx\_i + Tn\_i}{2}$ pour $i \in [[1;9]]$
+\item[Température moyenne annuelle] $Tm\_4\_9 = \frac{Tx\_i + Tn\_i}{2}$
+\end{enumerate}
+
+Nous avons aussi essayé d'ajouter le carré de toutes les variables (excepté IRR) en tant que nouvelles variables.
+
+\subsection*{Tests de réduction du nombre de variables}
+
+Des tests de réduction de nombre de variables ont été réalisés:
+\begin{itemize}
+\item Nous avons essayé de réalisé des ACPs sur nos données et d'utiliser les axes les plus explicatifs comme variables d'entrée des modèles
+\item Nous avons essayer des combinaisons de variables "à la main", basé sur la littérature ou des envies personnelles.
+\item Nous n'avons pas pu procéder à un test de réduction de variables systématique par manque de temps de calcul informatique.
+\end{itemize}
+
+\subsection*{Calibration du modèle sur des données agrégées}
+
+Avec pour but de réduire le bruit autour des variables, nous avons essayé de calibrer les modèles sur des variables agrégées à l'échelle de la France. Dans ce cas là, nous avons construit notre jeux de données d'entrée en faisant les moyennes de chaque ligne ayant la même année, pour chaque variable. Cela entraine une réduction considérable du nombre de point, ous n'avons testé cette méthode que sur un nombre de variable d'entrée réduit.
+
+\section*{Description du dossier de code}
+
+
+
+
+\section*{Conclusion}
+
+C'est une expérience très étrange de chercher à améliorer son modèle trouvé du premier coup, sans jamais y parvenir. 
+
+
+%\section*{Remerciements}
+%\addcontentsline{toc}{section}{Remerciements}
+%
+\clearpage
+\bibliographystyle{apalike}
+%\small
+%\footnotesize
+\setlength{\bibsep}{2pt}
+\begin{singlespace}
+\bibliography{biblio}
+\end{singlespace}
+\newpage
+
+
+\end{document}

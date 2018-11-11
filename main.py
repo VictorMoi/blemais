@@ -96,6 +96,7 @@ xname2ind = copy(name2ind_scaled)
 
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "year_harvest")
 x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "yield_anomaly")
+x,xind2name,xname2ind = delVar(x, xind2name, xname2ind, "NUMD")
 
 
 
@@ -106,7 +107,7 @@ x_squaredind2name = copy(maize_squaredind2name)
 x_squaredname2ind = copy(maize_squaredname2ind)
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "year_harvest")
 x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "yield_anomaly")
-
+x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2name, x_squaredname2ind, "NUMD")
 
 # aa = [mapping[i[5]+i[6]] for i in x[:,:]]
 # 1/0
@@ -135,6 +136,32 @@ x_anind2name = copy(x_squaredind2name)
 x_anname2ind = copy(x_squaredname2ind)
 sel_an = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd','DE_4_9','DE_4_9_sqrd','RV_4_9','RV_4_9_sqrd']
 x_an,x_anind2name,x_anname2ind = selVar(x_an, x_anind2name, x_anname2ind, sel_an)
+
+
+x_origin = copy(x_squared)
+x_originind2name = copy(x_squaredind2name)
+x_originname2ind = copy(x_squaredname2ind)
+sel_origin = ['ETP_1','ETP_2','ETP_3','ETP_4','ETP_5','ETP_6','ETP_7','ETP_8','ETP_9' ]+
+['PR_1','PR_2','PR_3','PR_4','PR_5','PR_6','PR_7','PR_8','PR_9']+
+['RV_1','RV_2','RV_3','RV_4','RV_5','RV_6','RV_7','RV_8','RV_9']+
+['SeqPR_1','SeqPR_2','SeqPR_3','SeqPR_4','SeqPR_5','SeqPR_6','SeqPR_7','SeqPR_8','SeqPR_9']+
+['Tn_1','Tn_2','Tn_3','Tn_4','Tn_5','Tn_6','Tn_7','Tn_8','Tn_9']+
+['Tx_1','Tx_2','Tx_3','Tx_4','Tx_5','Tx_6','Tx_7','Tx_8','Tx_9']+
+['IRR']
+x_origin,x_originind2name,x_originname2ind = selVar(x_origin, x_originind2name, x_originname2ind, sel_origin)
+
+x_originsqrd = copy(x_squared)
+x_originsqrdind2name = copy(x_squaredind2name)
+x_originsqrdname2ind = copy(x_squaredname2ind)
+sel_originsqrd = sel_origin + 
+['ETP_1_sqrd','ETP_2_sqrd','ETP_3_sqrd','ETP_4_sqrd','ETP_5_sqrd','ETP_6_sqrd','ETP_7_sqrd','ETP_8_sqrd','ETP_9_sqrd' ]+
+['PR_1_sqrd','PR_2_sqrd','PR_3_sqrd','PR_4_sqrd','PR_5_sqrd','PR_6_sqrd','PR_7_sqrd','PR_8_sqrd','PR_9_sqrd']+
+['RV_1_sqrd','RV_2_sqrd','RV_3_sqrd','RV_4_sqrd','RV_5_sqrd','RV_6_sqrd','RV_7_sqrd','RV_8_sqrd','RV_9_sqrd']+
+['SeqPR_1_sqrd','SeqPR_2_sqrd','SeqPR_3_sqrd','SeqPR_4_sqrd','SeqPR_5_sqrd','SeqPR_6_sqrd','SeqPR_7_sqrd','SeqPR_8_sqrd','SeqPR_9_sqrd']+
+['Tn_1_sqrd','Tn_2_sqrd','Tn_3_sqrd','Tn_4_sqrd','Tn_5_sqrd','Tn_6_sqrd','Tn_7_sqrd','Tn_8_sqrd','Tn_9_sqrd']+
+['Tx_1_sqrd','Tx_2_sqrd','Tx_3_sqrd','Tx_4_sqrd','Tx_5_sqrd','Tx_6_sqrd','Tx_7_sqrd','Tx_8_sqrd','Tx_9_sqrd']
+x_originsqrd,x_originsqrdind2name,x_originsqrdname2ind = selVar(x_originsqrd, x_originsqrdind2name, x_originsqrdname2ind, sel_originsqrd)
+
 
 
 
