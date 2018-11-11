@@ -38,14 +38,11 @@ if os.name == 'posix':
     warnings.filterwarnings("ignore", category=ConvergenceWarning)
     warnings.filterwarnings("ignore", category=FutureWarning)
 
-#### 4. Loading data
-
-maize_train, ind2name_train, name2ind_train = loadData("TrainingDataSet_Maize.txt")
-
-maize_test, ind2name_test, name2ind_test = loadData("TestDataSet_Maize_blind.txt")
 
 
 #### 3. Processing train data
+
+maize_train, ind2name_train, name2ind_train = loadData("TrainingDataSet_Maize.txt")
 
 
 # 3.1) creating variables in train dataset
@@ -94,8 +91,11 @@ x_train,xind2name_train,xname2ind_train = selVar(x_train, xind2name_train, xname
 scaler_x = preprocessing.StandardScaler().fit(x_train)
 scaler_y = preprocessing.StandardScaler().fit(y_train[:,np.newaxis])
 
-x_train_s = scaler_x.transform(x_train)
-y_train_s = scaler_y.transform(y_train[:,np.newaxis])[:,0]
+
+x_train_s = copy(x_train)
+x_train_s = scaler_x.transform(x_train_s)
+y_train_s = copy(y_train)
+y_train_s = scaler_y.transform(y_train_s[:,np.newaxis])[:,0]
 
 
 #### 4. Fitting the model
@@ -106,6 +106,9 @@ reg.fit(x_train_s,y_train_s)
 
 
 #### 5. Processing test data
+
+maize_test, ind2name_test, name2ind_test = loadData("TestDataSet_Maize_blind.txt")
+
 
 # 3.1) creating variables in train dataset
 
@@ -140,8 +143,8 @@ xname2ind_test = copy(name2ind_test)
 x_test,xind2name_test,xname2ind_test = selVar(x_test, xind2name_test, xname2ind_test, sel)
 
 # 3.3) Scaling test data
-
-x_test_s = scaler_x.transform(x_train)
+x_test_s = copy(x_test)
+x_test_s = scaler_x.transform(x_test_s)
 
 #### 5. Predict model on test data
 
@@ -149,9 +152,20 @@ x_test_s = scaler_x.transform(x_train)
 xind2name_test == xind2name_train
 
 y_test_s = reg.predict(x_test_s)
-
-y_test = scaler_y.inverse_transform(y_test_s[:,np.newaxis])[:,0]
+y_test = copy(y_test_s)
+y_test = scaler_y.inverse_transform(y_test[:,np.newaxis])[:,0]
 
 #### 6. Export data
 
-y_test.T
+export1 = pd.DataFrame(y_test[np.newaxis,:])
+export1.to_csv(os.path.join(project_path, "data", "mais_prediction_MoinardPierre1.txt"),sep='\t',index=False,header=False)
+
+y_test[:,np.newaxis].shape
+x_test.shape
+
+maize_export = np.concatenate((year_test[:,np.newaxis],dep_test[:,np.newaxis],x_test,y_test[:,np.newaxis]),axis=1)
+ind2name_export = ["year_harvest","NUMD"] + xind2name_test + ["predicted_yield_anomaly"]
+name2ind_export = {j:i for i,j in enumerate(ind2name_export)}
+
+export2 = pd.DataFrame(maize_export,columns = ind2name_export)
+export2.to_csv(os.path.join(project_path, "data", "mais_prediction_MoinardPierre2.txt"),sep='\t',index=False,header=True)
