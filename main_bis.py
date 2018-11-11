@@ -141,25 +141,24 @@ x_an,x_anind2name,x_anname2ind = selVar(x_an, x_anind2name, x_anname2ind, sel_an
 x_origin = copy(x_squared)
 x_originind2name = copy(x_squaredind2name)
 x_originname2ind = copy(x_squaredname2ind)
-sel_origin = ['ETP_1','ETP_2','ETP_3','ETP_4','ETP_5','ETP_6','ETP_7','ETP_8','ETP_9' ]+
-['PR_1','PR_2','PR_3','PR_4','PR_5','PR_6','PR_7','PR_8','PR_9']+
-['RV_1','RV_2','RV_3','RV_4','RV_5','RV_6','RV_7','RV_8','RV_9']+
-['SeqPR_1','SeqPR_2','SeqPR_3','SeqPR_4','SeqPR_5','SeqPR_6','SeqPR_7','SeqPR_8','SeqPR_9']+
-['Tn_1','Tn_2','Tn_3','Tn_4','Tn_5','Tn_6','Tn_7','Tn_8','Tn_9']+
-['Tx_1','Tx_2','Tx_3','Tx_4','Tx_5','Tx_6','Tx_7','Tx_8','Tx_9']+
-['IRR']
+sel_origin = ['ETP_1','ETP_2','ETP_3','ETP_4','ETP_5','ETP_6','ETP_7','ETP_8','ETP_9',
+'PR_1','PR_2','PR_3','PR_4','PR_5','PR_6','PR_7','PR_8','PR_9','RV_1','RV_2','RV_3','RV_4','RV_5','RV_6','RV_7','RV_8','RV_9',
+'SeqPR_1','SeqPR_2','SeqPR_3','SeqPR_4','SeqPR_5','SeqPR_6','SeqPR_7','SeqPR_8','SeqPR_9',
+'Tn_1','Tn_2','Tn_3','Tn_4','Tn_5','Tn_6','Tn_7','Tn_8','Tn_9',
+'Tx_1','Tx_2','Tx_3','Tx_4','Tx_5','Tx_6','Tx_7','Tx_8','Tx_9',
+'IRR']
 x_origin,x_originind2name,x_originname2ind = selVar(x_origin, x_originind2name, x_originname2ind, sel_origin)
 
 x_originsqrd = copy(x_squared)
 x_originsqrdind2name = copy(x_squaredind2name)
 x_originsqrdname2ind = copy(x_squaredname2ind)
-sel_originsqrd = sel_origin + 
-['ETP_1_sqrd','ETP_2_sqrd','ETP_3_sqrd','ETP_4_sqrd','ETP_5_sqrd','ETP_6_sqrd','ETP_7_sqrd','ETP_8_sqrd','ETP_9_sqrd' ]+
-['PR_1_sqrd','PR_2_sqrd','PR_3_sqrd','PR_4_sqrd','PR_5_sqrd','PR_6_sqrd','PR_7_sqrd','PR_8_sqrd','PR_9_sqrd']+
-['RV_1_sqrd','RV_2_sqrd','RV_3_sqrd','RV_4_sqrd','RV_5_sqrd','RV_6_sqrd','RV_7_sqrd','RV_8_sqrd','RV_9_sqrd']+
-['SeqPR_1_sqrd','SeqPR_2_sqrd','SeqPR_3_sqrd','SeqPR_4_sqrd','SeqPR_5_sqrd','SeqPR_6_sqrd','SeqPR_7_sqrd','SeqPR_8_sqrd','SeqPR_9_sqrd']+
-['Tn_1_sqrd','Tn_2_sqrd','Tn_3_sqrd','Tn_4_sqrd','Tn_5_sqrd','Tn_6_sqrd','Tn_7_sqrd','Tn_8_sqrd','Tn_9_sqrd']+
-['Tx_1_sqrd','Tx_2_sqrd','Tx_3_sqrd','Tx_4_sqrd','Tx_5_sqrd','Tx_6_sqrd','Tx_7_sqrd','Tx_8_sqrd','Tx_9_sqrd']
+sel_originsqrd = sel_origin + [
+'ETP_1_sqrd','ETP_2_sqrd','ETP_3_sqrd','ETP_4_sqrd','ETP_5_sqrd','ETP_6_sqrd','ETP_7_sqrd','ETP_8_sqrd','ETP_9_sqrd',
+'PR_1_sqrd','PR_2_sqrd','PR_3_sqrd','PR_4_sqrd','PR_5_sqrd','PR_6_sqrd','PR_7_sqrd','PR_8_sqrd','PR_9_sqrd',
+'RV_1_sqrd','RV_2_sqrd','RV_3_sqrd','RV_4_sqrd','RV_5_sqrd','RV_6_sqrd','RV_7_sqrd','RV_8_sqrd','RV_9_sqrd',
+'SeqPR_1_sqrd','SeqPR_2_sqrd','SeqPR_3_sqrd','SeqPR_4_sqrd','SeqPR_5_sqrd','SeqPR_6_sqrd','SeqPR_7_sqrd','SeqPR_8_sqrd','SeqPR_9_sqrd',
+'Tn_1_sqrd','Tn_2_sqrd','Tn_3_sqrd','Tn_4_sqrd','Tn_5_sqrd','Tn_6_sqrd','Tn_7_sqrd','Tn_8_sqrd','Tn_9_sqrd',
+'Tx_1_sqrd','Tx_2_sqrd','Tx_3_sqrd','Tx_4_sqrd','Tx_5_sqrd','Tx_6_sqrd','Tx_7_sqrd','Tx_8_sqrd','Tx_9_sqrd']
 x_originsqrd,x_originsqrdind2name,x_originsqrdname2ind = selVar(x_originsqrd, x_originsqrdind2name, x_originsqrdname2ind, sel_originsqrd)
 
 
@@ -288,14 +287,95 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
 
+
+
+
+
+
+
+# # all_data = load("blocks/all_data.npy")
+# # normal, reduced, lobell, lobell2, an, squared
+# idat = 0
+
+# lb = []
+
+# d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
+# y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+
+# # s = Split_Dataset(d, test_size=0.1)
+# # lb.append(s)
+
+# #ss = Split_Dataset_N_Parts(d, 10, seed=0)
+# #lb.append(s)
+
+# s = Non_Uniform_Split_Dataset_N_Parts(d, y, 10, seed=0)
+# lb.append(s)
+
+# j = Join_Dataset_N_Parts(lb[-1], index=-1)
+# lb.append(j)
+
+# sc = Scaler_x(lb[-1])
+# lb.append(sc)
+
+
+# r = Regressor(lb[-1], regressor=SVR)
+# lb.append(r)
+
+# p = Prediction_Error_L2(lb[-1])
+# lb.append(p)
+
+# si = Run_Function_Before(lb[-1], lambda x=None:j.set_param(index=j.index+1), force=True)
+# lb.append(si)
+
+
+
+# rp = Repeat(lb[-1], 10)
+
+
+
+
+
+
+
+
+
+
+# 1/0
+
+
+
+
+
+
+
+
+
+
+
+
 # all_data = load("blocks/all_data.npy")
 # normal, reduced, lobell, lobell2, an, squared
 idat = 0
 
 lb = []
 
-d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
-y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+# d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
+# y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+# lb.append(d)
+
+yy = Select_Train(Matrix_Dataset(year, None))
+
+d = []
+#d += [Matrix_Dataset(x, y)]
+d += [Matrix_Dataset(x, y)]
+d += [Matrix_Dataset(x_lobell, y)]
+d += [Matrix_Dataset(x_an, y)]
+d += [Matrix_Dataset(x_origin, y)]
+d += [Matrix_Dataset(x_originsqrd, y)]
+d += [Matrix_Dataset(x_squared, y)]
+
+sd = Select_Output(d, 0)
+lb.append(sd)
 
 # s = Split_Dataset(d, test_size=0.1)
 # lb.append(s)
@@ -303,13 +383,13 @@ y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
 #ss = Split_Dataset_N_Parts(d, 10, seed=0)
 #lb.append(s)
 
-s = Non_Uniform_Split_Dataset_N_Parts(d, y, 10, seed=0)
+s = Non_Uniform_Split_Dataset_N_Parts(sd, y, 10, seed=0)
 lb.append(s)
 
 j = Join_Dataset_N_Parts(lb[-1], index=0)
 lb.append(j)
 
-sc = Scaler(lb[-1])
+sc = Scaler_x(lb[-1])
 lb.append(sc)
 
 r = []
@@ -365,182 +445,22 @@ lb.append(e)
 # lb.append(sl)
 
 class Nbr_Calls:
-    def __init__(self, s, so, i):
+    def __init__(self, s, so, sd, i, j):
         self.n = 0
         self.s = s
         self.so = so
+        self.sd = sd
         self.i = i
+        self.j = j
     def __call__(self):
         #self.s.set_param(seed=self.n)
         self.s.set_param(index=self.n)
         self.so.set_param(index=self.i)
+        self.sd.set_param(index=self.j)
         self.n += 1
 
 #f = Run_Function_Before(lb[-1], lambda x=None : setattr(s,"changed_here",True))
 #f = Run_Function_Before(lb[-1], lambda x=None : s.set_seed(s.seed+1))
-f = [Run_Function_Before(lb[-1], Nbr_Calls(j, so, i), force=True) for i in xrange(len(r))]
+f = [Run_Function_Before(lb[-1], Nbr_Calls(j, so, sd, i, k), force=True) for i in xrange(len(r)) for k in xrange(len(d))]
 lb += f
 mab = Uniform_MAB(f, 1)
-
-
-1/0
-
-# set _changed_here variable to an int !!
-
-
-# lb = []
-
-
-# b = Sklearn_Dataset("boston")
-# lb.append(b)
-# s = Split_Dataset(lb[-1], test_size=0.2)
-# s.set_seed(0)
-# lb.append(s)
-# so = Select_Output([s,b], 0)
-# lb.append(so)
-# r = Regressor(lb[-1], LinearRegression)
-# lb.append(r)
-# t = Measure_Time(lb[-1])
-# lb.append(t)
-# p = Prediction_Error_L2(lb[-1])
-# lb.append(p)
-# def func2():
-#     print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5}".format(s.seed, round(v.train(),3), round(v.test(),3), round(t.time,3))
-# v = Verbose(lb[-1], func2)
-# lb.append(v)
-
-# 1/0
-# r = Snapshot_Attributes_(Measure_Time_(Regressor(s, LinearRegression)), "time")
-# v2 = Verbose_(Prediction_Error_L2(r), func2)
-lb = []
-
-
-b = Sklearn_Dataset("boston")
-lb.append(b)
-# s = Split_Dataset(lb[-1], test_size=0.2, seed=2)
-# # s.set_param(seed=0)
-# lb.append(s)
-
-s = Split_Dataset_N_Parts(lb[-1], 10, seed=0)
-lb.append(s)
-j = Join_Dataset_N_Parts(lb[-1], index=0)
-lb.append(j)
-
-r1 = Regressor(lb[-1], regressor=LinearRegression)
-r2 = Regressor(lb[-1], regressor=Ridge)
-r3 = Regressor(lb[-1], regressor=RandomForestRegressor)
-r4 = Regressor(lb[-1], regressor=SVR)
-lb.append(r1)
-lb.append(r2)
-lb.append(r3)
-lb.append(r4)
-so = Select_Output([r1, r2, r3, r4], 0)
-lb.append(so)
-t = Measure_Time(lb[-1])
-lb.append(t)
-sn = Snapshot_Attributes(lb[-1], "time")
-lb.append(sn)
-
-# so = Snapshot_Attributes_(Measure_Time_(Select_Output([r1, r2, r3, r4], 0)), "time")
-# lb.append(so)
-
-# so = Snapshot_Attributes_(Measure_Time_(Regressor(s, LinearRegression)), "time")
-# lb.append(so)
-
-def func2():
-    print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5} : {}".format(s.seed, round(p.output[0],3), round(p.output[1],3), round(t.time,3), lb[2+so.index].name)
-
-# v = Verbose_(Prediction_Error_L2(lb[-1]), func2)
-# lb.append(v)
-p = Prediction_Error_L2(lb[-1])
-lb.append(p)
-v = Verbose(lb[-1], func2)
-lb.append(v)
-sl = Select_Test(lb[-1])
-lb.append(sl)
-# sl = Redirect_To_Test(lb[-1])
-# lb.append(sl)
-
-class Nbr_Calls:
-    def __init__(self, s, so, i):
-        self.n = 0
-        self.s = s
-        self.so = so
-        self.i = i
-    def __call__(self):
-        self.s.set_param(seed=self.n)
-        self.so.set_param(index=self.i)
-        self.n += 1
-
-#f = Run_Function_Before(lb[-1], lambda x=None : setattr(s,"changed_here",True))
-#f = Run_Function_Before(lb[-1], lambda x=None : s.set_seed(s.seed+1))
-f1 = Run_Function_Before(lb[-1], Nbr_Calls(s, so, 0))
-f1.force_compute()
-f2 = Run_Function_Before(lb[-1], Nbr_Calls(s, so, 1))
-f2.force_compute()
-f3 = Run_Function_Before(lb[-1], Nbr_Calls(s, so, 2))
-f3.force_compute()
-f4 = Run_Function_Before(lb[-1], Nbr_Calls(s, so, 3))
-f4.force_compute()
-lb.append(f1)
-lb.append(f2)
-lb.append(f3)
-lb.append(f4)
-
-mab = Uniform_MAB([f1, f2, f3, f4], 3)
-
-
-
-# i = Repeat(lb[-1], 10)
-# lb.append(i)
-# # o = Timeout(lb[-1], 1, default_func=lambda x=None:getattr(i,"output"))
-# # lb.append(o)
-# m = Mean(lb[-1])
-# lb.append(m)
-# mt = Measure_Time(lb[-1])
-# lb.append(mt)
-# # m = Measure_Time_(Mean(lb[-1]))
-# # lb.append(m)
-
-#lb[-1]()
-
-# b = Sklearn_Dataset("boston")
-# s = Split_Dataset(b, test_size=0.2)
-# # s = Seed_Increment(s1)
-# # m = Measure_Time(Regressor, s, LinearRegression)
-# m = Snapshot_Attributes_(Measure_Time_(Regressor(s, LinearRegression)), "time")
-
-# # string_function = lambda x,y:"err : {}, time : {}".format(x[1], y)
-# # e = Verbose_(Prediction_Error_L2(m), string_function, [("self", "output"), (m, "time")])
-
-# # mm = Prediction_Error_L2(m)
-# # string_function = lambda x=None:(print "err : {}, time : {}".format(mm.output[1], m.time))
-# # string_function = lambda x=None:"err : {}, time : {}".format(getattr(mm, "output")[1], getattr(m, "time"))
-
-# def func2():
-#     print "err : {}, time : {}".format(e.output[1], m.time)
-
-# # e = Verbose(mm, func2)
-
-# e = Verbose_(Prediction_Error_L2(m), func2)
-# # def func1():
-# #     s._changed_here = True
-
-# e = Run_Function(e, lambda x=None : setattr(s,"changed_here",True))
-# #ee = Run_Function(mm, lambda x=None : s.set_changed_here(True))
-# #ee = Run_Function(mm, func1)
-# eee = Repeat(ee, 10)
-# eeee = Measure_Time_(Mean(eee))
-
-
-#r = Regressor(s, LinearRegression)
-#e = Prediction_Error_L2(r)
-
-
-
-# m = measure_time(Regressor, s, LinearRegression)
-# m = Measure_Time(s, LinearRegression)
-
-# t = -time.time()
-# m.snapshots[0]()
-# t += time.time()
