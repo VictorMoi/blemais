@@ -14,3 +14,4 @@ kernels/doc*
 kernels/pykernels/graph/data*
 *~
 *.pyc
+*.npy
