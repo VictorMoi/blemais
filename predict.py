@@ -90,6 +90,11 @@ xind2name = copy(ind2name_scaled)
 xname2ind = copy(name2ind_scaled)
 
 
+# 3.4) Selecting variable
+
+
 #### 4. Fitting the model
 
-_run_one_regression
+reg = Regression_With_Custom_Kernel(KernelRidge(), Tanimoto()))
+
+reg.fit()
