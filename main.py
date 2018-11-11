@@ -111,8 +111,8 @@ x_squared,x_squaredind2name,x_squaredname2ind = delVar(x_squared, x_squaredind2n
 
 # aa = [mapping[i[5]+i[6]] for i in x[:,:]]
 # 1/0
-x_reduced = copy(maize_squared)
-x_reducedind2name = copy(maize_squaredind2name)
+x_reduced = copy(maize_scaled)
+x_reducedind2name = copy(ind2name_scaled)
 x_reducedname2ind = copy(name2ind_scaled)
 x_reduced,x_reducedind2name,x_reducedname2ind = delVar(x_reduced, x_reducedind2name, x_reducedname2ind, ["year_harvest","yield_anomaly"])
 sel1 = ['ETP_5','ETP_6','ETP_7','ETP_8','ETP_9','PR_4','PR_5','SeqPR_8','SeqPR_9','Tm_5','Tm_6','Tm_7','Tm_8','Tm_9']
@@ -179,7 +179,7 @@ mat_year = mat_year.T
 mat_year = mat_year.astype(float)/(np.sum(mat_year,axis = 1)[:,np.newaxis])
 x_year = mat_year.dot(x_year)
 
-#x_year.shape
+#x_dep.shape
 #x.shape
 #x_dep
 
@@ -188,6 +188,10 @@ y_year = mat_year.dot(y_year)
 
 year_year = copy(year)
 year_year = mat_year.dot(year_year)
+year_year = np.asarray([int(round(i)) for i in year_year])
+
+
+# all_data = [(x,y,year), (x_reduced,y,year), (x_lobell,y,year), (x_lobell2,y,year), (x_an,y,year), (x_squared,y,year)]
 
 
 #### 4) Runing regressions
@@ -254,6 +258,8 @@ import sklearn
 
 # c = 0+reg.coef_
 # c = c/np.linalg.norm(c)
+# ind = np.argsort(np.abs(c))[::-1]
+# x2 = np.concatenate([x_lobell, x[:,ind[:0]]], axis=1)
 # xx = np.dot(x, np.diag(c))
 
 # x = xx
@@ -261,12 +267,12 @@ import sklearn
 
 #x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
 
-split_func_for_reg_2(year, year_year)
+#s = split_func_for_reg_2(year)
 
-1/0
-sel = Uniform_MAB(1, 10)
+
+sel = Uniform_MAB(1, 3)
 #err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
-err = run_all_regressions(x_year, y_year, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True)
+err = run_all_regressions(x, y, regs="regressions/reg_lists/one_of_each.py", verbose=True, show=False, x_test=0.1, final_verbose=True, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 1/0
 
 
