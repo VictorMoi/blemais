@@ -122,7 +122,7 @@ x_lobell = copy(x_squared)
 x_lobellind2name = copy(x_squaredind2name)
 x_lobellname2ind = copy(x_squaredname2ind)
 sel_lobell = ['Tm_4_9','PR_4_9','Tm_4_9_sqrd','PR_4_9_sqrd']
-x_lobell,x_lobellind2name,x_lobellname2ind = selVar(x_lobell2, x_lobellind2name, x_lobell2name2ind, sel_lobell)
+x_lobell,x_lobellind2name,x_lobellname2ind = selVar(x_lobell, x_lobellind2name, x_lobellname2ind, sel_lobell)
 
 x_lobell2 = copy(x_squared)
 x_lobell2ind2name = copy(x_squaredind2name)
@@ -162,6 +162,9 @@ y_year = mat_year.dot(y_year)
 year_year = copy(year)
 year_year = mat_year.dot(year_year)
 year_year = np.asarray([int(round(i)) for i in year_year])
+
+
+# all_data = [(x,y,year), (x_reduced,y,year), (x_lobell,y,year), (x_lobell2,y,year), (x_an,y,year), (x_squared,y,year)]
 
 
 #### 4) Runing regressions
@@ -222,12 +225,14 @@ import sklearn
 # year1 = year[a]
 
 
-# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, xx_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
+# err = run_all_regressions(x, y, regs="regressions/reg_lists/five_best.py", verbose=True, show=False, x_test=0.1, final_verbose=False, selection_algo=sel, seed=0, save_all_fit_regs=True, split_func=split_func_for_reg(year))
 
 # reg = err[0]['reg'][1]
 
 # c = 0+reg.coef_
 # c = c/np.linalg.norm(c)
+# ind = np.argsort(np.abs(c))[::-1]
+# x2 = np.concatenate([x_lobell, x[:,ind[:0]]], axis=1)
 # xx = np.dot(x, np.diag(c))
 
 # x = xx
@@ -235,7 +240,7 @@ import sklearn
 
 #x = preprocessing.scale(np.concatenate([x, x*x], axis=1))
 
-s = split_func_for_reg_2(year)
+#s = split_func_for_reg_2(year)
 
 
 sel = Uniform_MAB(1, 3)
