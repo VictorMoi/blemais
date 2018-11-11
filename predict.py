@@ -38,63 +38,116 @@ if os.name == 'posix':
     warnings.filterwarnings("ignore", category=ConvergenceWarning)
     warnings.filterwarnings("ignore", category=FutureWarning)
 
-    
-#### 3. Processing data
+#### 4. Loading data
 
-# 3.1) loading data
-
-maize, ind2name, name2ind = loadData("TrainingDataSet_Maize.txt")
-
+maize_train, ind2name_train, name2ind_train = loadData("TrainingDataSet_Maize.txt")
 
 maize_test, ind2name_test, name2ind_test = loadData("TestDataSet_Maize_blind.txt")
 
 
-# 3.2) creating variables
-
-maize, ind2name, name2ind = addDE(maize, ind2name, name2ind)
-maize, ind2name, name2ind = addTm(maize, ind2name, name2ind)
-maize, ind2name, name2ind = addGDD(maize, ind2name, name2ind)
-maize, ind2name, name2ind = addVarAn(maize, ind2name, name2ind)
+#### 3. Processing train data
 
 
-maize_squared = copy(maize)
-ind2name_squared = copy(ind2name)
-name2ind_squared = copy(name2ind)
+# 3.1) creating variables in train dataset
 
-maize_squared = np.concatenate([maize_squared, maize_squared*maize_squared], axis=1)
-maize_squaredind2name = ind2name+[ n+"_sqrd" for n in ind2name]
-maize_squaredname2ind = {j:i for i,j in enumerate(maize_squaredind2name)}
-
-maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "NUMD_sqrd")
-maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "yield_anomaly_sqrd")
-maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "year_harvest_sqrd")
-maize_squared, maize_squaredind2name, maize_squaredname2ind = delVar(maize_squared, maize_squaredind2name, maize_squaredname2ind, "IRR_sqrd")
-
-# 3.3) creating other datasets from mai one (maize)
-
-maize_scaled = preprocessing.scale(maize)
-maize_squared = preprocessing.scale(maize_squared)
-ind2name_scaled = copy(ind2name)
-name2ind_scaled = copy(name2ind)
-
-y = maize_scaled[:, name2ind_scaled["yield_anomaly"]]
-y_mean = mean(maize_scaled[:, name2ind_scaled["yield_anomaly"]])
-y_sd = np.var()
+maize_train, ind2name_train, name2ind_train = addDE(maize_train, ind2name_train, name2ind_train)
+maize_train, ind2name_train, name2ind_train = addTm(maize_train, ind2name_train, name2ind_train)
+maize_train, ind2name_train, name2ind_train = addGDD(maize_train, ind2name_train, name2ind_train)
+maize_train, ind2name_train, name2ind_train = addVarAn(maize_train, ind2name_train, name2ind_train)
 
 
-year = maize[:, name2ind["year_harvest"]]
-dep = maize[:, name2ind["NUMD"]]
+maize_train = np.concatenate([maize_train, maize_train*maize_train], axis=1)
+ind2name_train = ind2name_train+[ n+"_sqrd" for n in ind2name_train]
+name2ind_train = {j:i for i,j in enumerate(ind2name_train)}
 
-x = copy(maize_scaled)
-xind2name = copy(ind2name_scaled)
-xname2ind = copy(name2ind_scaled)
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "NUMD_sqrd")
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "yield_anomaly_sqrd")
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "year_harvest_sqrd")
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "IRR_sqrd")
 
 
-# 3.4) Selecting variable
+year_train = maize_train[:, name2ind_train["year_harvest"]]
+dep_train = maize_train[:, name2ind_train["NUMD"]]
+
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "NUMD")
+maize_train, ind2name_train, name2ind_train = delVar(maize_train, ind2name_train, name2ind_train, "year_harvest")
+
+y_train = maize_train[:, name2ind_train["yield_anomaly"]]
+
+x_train = copy(maize_train)
+xind2name_train = copy(ind2name_train)
+xname2ind_train = copy(name2ind_train)
+
+# 3.2) Selecting variable
+sel = ['ETP_1','ETP_2','ETP_3','ETP_4','ETP_5','ETP_6','ETP_7','ETP_8','ETP_9',
+'PR_1','PR_2','PR_3','PR_4','PR_5','PR_6','PR_7','PR_8','PR_9',
+'RV_1','RV_2','RV_3','RV_4','RV_5','RV_6','RV_7','RV_8','RV_9',
+'SeqPR_1','SeqPR_2','SeqPR_3','SeqPR_4','SeqPR_5','SeqPR_6','SeqPR_7','SeqPR_8','SeqPR_9',
+'Tn_1','Tn_2','Tn_3','Tn_4','Tn_5','Tn_6','Tn_7','Tn_8','Tn_9',
+'Tx_1','Tx_2','Tx_3','Tx_4','Tx_5','Tx_6','Tx_7','Tx_8','Tx_9',
+'IRR']
+
+x_train,xind2name_train,xname2ind_train = selVar(x_train, xind2name_train, xname2ind_train, sel)
+
+# 3.3) Scaling train data
+
+scaler_x = preprocessing.StandardScaler().fit(x_train)
+scaler_y = preprocessing.StandardScaler().fit(y_train[:,np.newaxis])
+
+x_train_s = scaler_x.transform(x_train)
+y_train_s = scaler_y.transform(y_train[:,np.newaxis])[:,0]
 
 
 #### 4. Fitting the model
 
-reg = Regression_With_Custom_Kernel(KernelRidge(), Tanimoto()))
+reg = Regression_With_Custom_Kernel(KernelRidge(), Tanimoto())
 
-reg.fit()
+reg.fit(x_train_s,y_train_s)
+
+
+#### 5. Processing test data
+
+# 3.1) creating variables in train dataset
+
+
+maize_test, ind2name_test, name2ind_test = addDE(maize_test, ind2name_test, name2ind_test)
+maize_test, ind2name_test, name2ind_test = addTm(maize_test, ind2name_test, name2ind_test)
+maize_test, ind2name_test, name2ind_test = addGDD(maize_test, ind2name_test, name2ind_test)
+maize_test, ind2name_test, name2ind_test = addVarAn(maize_test, ind2name_test, name2ind_test)
+
+
+maize_test = np.concatenate([maize_test, maize_test*maize_test], axis=1)
+ind2name_test = ind2name_test+[ n+"_sqrd" for n in ind2name_test]
+name2ind_test = {j:i for i,j in enumerate(ind2name_test)}
+
+maize_test, ind2name_test, name2ind_test = delVar(maize_test, ind2name_test, name2ind_test, "NUMD_sqrd")
+maize_test, ind2name_test, name2ind_test = delVar(maize_test, ind2name_test, name2ind_test, "year_harvest_sqrd")
+maize_test, ind2name_test, name2ind_test = delVar(maize_test, ind2name_test, name2ind_test, "IRR_sqrd")
+
+
+year_test = maize_test[:, name2ind_test["year_harvest"]]
+dep_test = maize_test[:, name2ind_test["NUMD"]]
+
+maize_test, ind2name_test, name2ind_test = delVar(maize_test, ind2name_test, name2ind_test, "NUMD")
+maize_test, ind2name_test, name2ind_test = delVar(maize_test, ind2name_test, name2ind_test, "year_harvest")
+
+x_test = copy(maize_test)
+xind2name_test = copy(ind2name_test)
+xname2ind_test = copy(name2ind_test)
+
+# 3.2) Selecting variable
+
+x_test,xind2name_test,xname2ind_test = selVar(x_test, xind2name_test, xname2ind_test, sel)
+
+# 3.3) Scaling test data
+
+x_test_s = scaler_x.transform(x_train)
+
+#### 5. Predict model on test data
+
+#check names
+xind2name_test == xind2name_train
+
+y_test_s = reg.predict(x_test_s)
+
+y_test = scaler_y.inverse_transform(y_test_s[:,np.newaxis])[:,0]
