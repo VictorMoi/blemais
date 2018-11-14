@@ -277,6 +277,11 @@ class Select_Test(Custom_Input_Block):
     def custom_compute(self):
         return self._input_block()[1]
 
+class Add_Time(Custom_Block):
+    def custom_compute(self):
+        return self._input_block[0]() + [self.input_block[1].time]
+
+
 
 
 from copy import deepcopy as cp
@@ -383,7 +388,7 @@ lb.append(sd)
 #ss = Split_Dataset_N_Parts(d, 10, seed=0)
 #lb.append(s)
 
-s = Non_Uniform_Split_Dataset_N_Parts(sd, y, 10, seed=0)
+s = Non_Uniform_Split_Dataset_N_Parts(sd, yy, 10, seed=0)
 lb.append(s)
 
 j = Join_Dataset_N_Parts(lb[-1], index=0)
@@ -395,6 +400,8 @@ lb.append(sc)
 r = []
 # r += [Regressor(lb[-1], regressor=LinearRegression)]
 # r += [Regressor(lb[-1], regressor=Ridge)]
+# r += [Regressor(lb[-1], regressor=MultiTaskElasticNet)]
+# r += [Regressor(lb[-1], regressor=ARDRegression)]
 # r += [Regressor(lb[-1], regressor=RandomForestRegressor)]
 # r += [Regressor(lb[-1], regressor=SVR)]
 # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())]
@@ -417,26 +424,34 @@ lb.append(t)
 # sn = Snapshot_Attributes(lb[-1], "time")
 # lb.append(sn)
 def verbose_func():
-    print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5} : {}".format(s.seed, round(p.output[0],3), round(p.output[1],3), round(t.time,3), r[so.index].name)
+    print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5} : {}".format(s.seed, round(p.output[0],3), round(p.output[1],3), round(t.time,3), str(sd.index) + " " + r[so.index].name)
 
 def error_func():
     print "Regression error : {}".format(r[so.index].name)
-    return 0
+    return [100, 100, 10, sd.index, so.index]
 
 def timeout_func():
     print "Regression timed out : {}".format(r[so.index].name)
-    return 0
+    return [100, 100, 10, sd.index, so.index]
 
 # v = Verbose_(Prediction_Error_L2(lb[-1]), func2)
 # lb.append(v)
 p = Prediction_Error_L2(lb[-1])
 lb.append(p)
-v = Verbose(lb[-1], verbose_func)
-lb.append(v)
-sl = Select_Test(lb[-1])
-lb.append(sl)
+# sl = Select_Test(lb[-1])
+# lb.append(sl)
 
-to = Timeout(lb[-1], seconds=3, default_func=timeout_func)
+v = Verbose(lb[-1], verbose_func, force=True)
+lb.append(v)
+
+class Add_Values(Custom_Input_Block):
+    def custom_compute(self):
+        return self._input_block() + [t.time, sd.index, so.index]
+
+ad = Add_Values(lb[-1])#, [(t, "time"), (sd, "index"), (so, "index")])
+lb.append(ad)
+
+to = Timeout(lb[-1], seconds=5, default_func=timeout_func)
 lb.append(to)
 e = Ignore_Exception(lb[-1], exception=[ValueError, TypeError], default_func=error_func)
 lb.append(e)
@@ -454,6 +469,8 @@ class Nbr_Calls:
         self.j = j
     def __call__(self):
         #self.s.set_param(seed=self.n)
+        if self.j == 0:
+            time.sleep(1)
         self.s.set_param(index=self.n)
         self.so.set_param(index=self.i)
         self.sd.set_param(index=self.j)
@@ -463,4 +480,20 @@ class Nbr_Calls:
 #f = Run_Function_Before(lb[-1], lambda x=None : s.set_seed(s.seed+1))
 f = [Run_Function_Before(lb[-1], Nbr_Calls(j, so, sd, i, k), force=True) for i in xrange(len(r)) for k in xrange(len(d))]
 lb += f
-mab = Uniform_MAB(f, 1)
+# mab = Uniform_MAB(f, 1)
+mab = Uniform_MAB_Thresholds(f, 10, reward_func=lambda x:x[1], threshold_max=10)
+
+
+
+def verbose_final():
+    print("\n\n")
+    order = np.argsort(mab.mean_rewards)
+    for i in order:
+        rewards = mab.raw_rewards[i]
+        #    for i,rewards in enumerate(mab.raw_rewards):
+        m_tr, m_te, m_ti, sdi, soi = np.mean(np.asarray(rewards), axis=0).tolist()
+        s_tr, s_te, s_ti, _, _ = np.std(np.asarray(rewards), axis=0).tolist()
+        print "train_err : {:<5}+-{:<5},   test_err : {:<5}+-{:<5},   time : {:<5}+-{:<5}   : {} {}".format(round(m_tr,3), round(s_tr,3), round(m_te,3), round(s_te,3), round(m_ti,3), round(s_ti,3), int(round(sdi)), r[int(round(soi))].name)
+
+
+fv = Verbose(mab, verbose_final, force=True)
