@@ -24,12 +24,12 @@
 %\usepackage{times}
 %\usepackage{graphicx}
 \usepackage[table]{xcolor}
-%%\usepackage[explicit]{titlesec}
-%%\usepackage{tcolorbox}
+\usepackage[explicit]{titlesec}
+\usepackage{tcolorbox}
 \usepackage{pdfpages}
 \usepackage[]{subcaption}%pour les subfigure
 %\usepackage[section]{placeins}%empeche les flottant de sortir de leur section. penser aussi à utiliser \clearpage et \FloatBarrier
-%%\usepackage{placeins}
+\usepackage{placeins}
 %\usepackage{caption}
 %\usepackage{setspace}
 %\renewcommand*\rmdefault{ppl}
@@ -160,7 +160,7 @@
 }
 {
 \end{figure}
-\renewcommand{\figurename}{Figure}
+\renewcommand{\figurena	me}{Figure}
 \addtocounter{numphoto}{1}
 \setcounter{figure}{\thesave}
 }
@@ -200,8 +200,8 @@ Crop Data Challenge - Victor Moinard et Alban Pierre
 
 Ce travail a été co-réalisé par:
 \begin{description}
-\item [Victor Moinard] Doctorant à l'UMR INRA - APT ECOSYS depuis septembre 2018
-\item[Alban Pierre] Étudiant en informatique en quatrième année à l'École Normale Supérieur
+\item [Victor Moinard -- vmoinard@live.fr] Doctorant à l'UMR INRA - APT ECOSYS depuis septembre 2018
+\item[Alban Pierre] Étudiant en informatique en quatrième année à l'École Normale Supérieure
 \end{description}
 
 Nous concourons au Crop Data Challenge dans la section "Maïs".
@@ -214,9 +214,84 @@ Nous avons développé notre modèle en utilisant python 3.
 
 Les packages "numpy", "panda", et "matplotlib" ont été utilisés pour la manipulation des données. Les packages "sklearn" et "pykernel' ont été utilisé pour implémenter les modèles de prédiction.
 
+Le package "sklearn" est disponible à cette adresse: https://scikit-learn.org/stable/. Il s'agit d'un package regroupant de nombreux modèles de régression par apprentissage classiques: régressions linéaire, ridge, SVM entre autre. D'autres fonctionnalités de réductions du nombre de variables, de transformation des données, ou encore de réalisation de l'astuce du noyau sont aussi implémentées.
+ 
+Le package "pykernel" a été récupéré à cette adresse: https://github.com/gmum/pykernels . Il a été légèrement modifié (gestion du PATH). Il est donc fourni dans le code envoyé. Il s'agit d'un package fournissant des fonctions de noyau non implémenté dans sklearn. Nous avons codés des fonctions permettant d'utiliser les noyaux de pykernel dans les méthodes de régression par noyau de sklearn.
+
 \subsection*{Variables utilisées}
 
-Les variables utilisées sont toutes celles fournies :
+\subsubsection*{Création de nouvelles variables}
+
+
+Nous avons essayé d'ajouter de nouvelles variables (obtenues par combinaisons de celles fournies). Nous avons d'abord ajouter de nouvelles variables mensuelles:
+\begin{itemize}
+\item Températures moyennes mensuelles: $Tm\_i = \frac{Tx\_i + Tn\_i}{2}$ pour $i \in [\![1;9]\!]$
+\item Growth Degree Day (GDD) mensuels: $GDD\_i = max\left( Tm\_i - 5 ; 5\right) \times Number_{days}$ avec $Number_{days} = 30$ pour pour $i \in [\![1;9]\!]$
+\end{itemize}
+Nous avons calculé un indicateur de sécheresse, le déficit hydrique, basé sur les calculs de \citep{piedallu_soil_2016}
+
+
+\textbf{Les réserves utiles mensuelles (RU\_m)}, c'est-à-dire la quantité d'eau présente dans le sol au mois m (en cm), sont calculées par itération sur une année (avec une RUM = 10cm):
+%$RU_{0}=RUM ; Pour m\in[\![2;12]\!] Si PR\_m>ETP\_m: RU\_m=RU_{m-1} + PR\_m - ETP\_m, sinon RU\_m=RU_{m-1}\times e^{\frac{(PR\_m - ETP\_m)}{RUM}}. Si RU\_m<0, RU\_m=0, et si RU\_m>RUM, RU\_m=RUM $
+$$
+\begin{array}{l}
+	\left\{
+		\begin{array}{ll}
+			\text{pour }m=1,&RU\_{1}=RUM=10cm\\[15pt]
+			\text{pour }m \in [\![2;9]\!],&RU\_m=
+				\left|
+					\begin{array}{ll} 
+						RU\_m-1 + PR\_m - ETP\_m&\quad \text{si }PR\_m>ETP\_m\\[10pt]
+						RU\_m-1\times e^{\frac{(PR\_m - ETP\_m)}{RUM}}&\quad \text{si }PR\_m\leq ETP\_m\\
+					\end{array}
+				\right. \\
+			\end{array}
+	\right. \\[45pt]
+\text{avec }\forall m\in [\![1;12]\!],
+	\left\{
+		\begin{array}{lll}
+			RU\_m&=0&\quad\text{si }RU\_m<0\\
+			RU\_m&=RUM&\quad\text{si }RU\_m>RUM\\
+		\end{array}
+	\right.
+\end{array}
+$$
+~\\
+On en déduit la valeur des \textbf{évapotranspirations réelles mensuelles (ETR\down{m})}, c'est à dire l'eau qui a réellement pu s'évaporer (en cm):
+%$Si PR\_m>ETP\_m: ETR\_m=ETP\_m, sinon: ETR\_m=RU_{m-1}-RU{m}+PR\_m$
+$$
+ETR\_m=
+	\left\{
+		\begin{array}{ll}
+			ETP\_m&\quad\text{si }PR\_m>ETP\_m\\
+			RU_{m-1}-RU{m}+PR\_m&\quad\text{si }PR\_m\leq ETP\_m\\
+		\end{array}
+	\right.
+$$
+~\\
+\textbf{Les déficits hydriques (=édaphiques) mensuels (DE\down{m})} sont égaux à la différence entre l'ETP\down{m} et l'ETR\down{m}:
+%$DE\_m=ETP\_m-ETR\_m$
+$$DE\_m=ETP\_m-ETR\_m$$
+~\\
+
+Parmi ces variables, seules les $DE\_m$ avec $m \in [\![1;9]\!]$ ont été conservées
+
+Nous avons enfin essayé de calculer des variables agrégées sur l'ensemble de la période végétative: 
+
+\begin{itemize}
+\item Précipitation totale: $PR\_4\_9 = \sum_{i =4}^{9}PR\_i$
+\item Température moyenne: $Tm\_4\_9 = \frac{\sum_{i =4}^{9}Tm\_i}{6}$
+\item Growth Degree Day (GDD): $GDD\_4\_9 = \sum_{i =4}^{9}GDD\_i$
+\item Somme des rayonnement: $RV\_4\_9 = \sum_{i =4}^{9}RV\_i$
+\item Déficit hydrique: $DE\_4\_9 = \sum_{i =4}^{9}DE\_i$
+\end{itemize}
+\subsubsection*{Normalisation des variables}
+
+Toutes les variables sont centrées et réduites, ce qui facilite les fonctionnement des modèles développés dans le package sklearn.
+
+\subsubsection*{Sélection finales des variables d'entrée}
+
+Au final, les variables mises en entrée des modèles sont les suivantes (sous leur forme centrée et réduite):
 \begin{itemize}
 \item ETP\_1 à ETP\_9
 \item PR\_1 à PR\_9
@@ -224,71 +299,84 @@ Les variables utilisées sont toutes celles fournies :
 \item SeqPR\_1 à SeqPR\_9
 \item Tn\_1 à Tn\_9
 \item Tx\_1 à Tx\_9
+\item DE\_1 à DE\_9
+\item GDD\_1 à GDD\_9
 \item IRR
+\item DE\_4\_9
+\item PR\_4\_9
+\item Tm\_4\_9
+\item RV\_4\_9
+\item GDD\_4\_9
 \end{itemize}
 
-On considère que la variable IRR peut être traité comme une variable quantitative continue.
 
-Toutes les variables sont centrées et réduites, ce qui facilite les fonctionnement des modèles développés dans le package sklearn.
+\subsubsection*{Variable de sortie}
 
-La variable réponse du modèle est la variable "yield\_anomay", centrée réduite. 
+La variable réponse du modèle est la variable "yield\_anomaly", centrée réduite. Les modèles sont donc calibrées avec une variable yield\_anomaly centrée réduite. Les prédictions du modèles sont donc dénormalisées avant d'être exportées.
 
 
 \subsection*{Nature du modèle}
 
-L'algorithme utilisé est le modèle "Kernel Tanimoto" du package pykernel.
+Quatre modèles sont calibrés pour les variables décrites ci-dessus :
+\begin{itemize}
+\item Une régression Ridge après application d'une astuce du noyau avec le noyau RBF
+\item Une régression Ridge après application d'une astuce du noyau avec le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
+\item Une régression Ridge après application d'une astuce du noyau avec le noyau de Cauchy
+\item Une régression Ridge après application d'une astuce du noyau avec le noyau exponentiel
+\end{itemize}
 
-Il s'agit d'une méthode de prédiction par noyau, utilisant le noyau de Tanimoto. Ce noyau a à l'origine été utilisé en chimie pour en analyse moléculaire.
+Chacun des quatre modèles fournit une prédiction, la valeur retenue est la moyenne de ces quatre prédictions.
 
 \subsection*{Estimation a priori du RMSE}
 
-Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,74.
-
-
+Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,899, avec un écart type de 0.374.
 
 \section*{Recherches et développement du modèle}
 
-Durant nos recherches, nous avons calibrés de nombreux modèles pour vous présenter celui fournissant es meilleurs résultats \textit{a priori}. Pour chaque modèle calibré, nous avons estimé une valeur de RMSE \textit{a priori} à l'aide de cross validation.
+Durant nos recherches, nous avons calibrés de nombreux modèles pour vous présenter celui fournissant les meilleurs résultats \textit{a priori}. Pour chaque modèle calibré, nous avons estimé une valeur de RMSE \textit{a priori} à l'aide de cross validation.
 
 \subsection*{Sélection du meilleur modèle}
 
-Nous calibrons chaque modèle sur 35 années "train", et nous le testons sur 3 années "test". Cette démarche est réalisée plusieurs fois (en général 10), et on compare le RMSE moyen. Le modèle présenté ci-dessus est le meilleur que nous ayons trouvé. Néanmoins, d'autres modèles ne sont pas significativement moins performant: une procédure par noyau avec les noyau de Cauchy ou RBF, et une méthode  par Support Vector Machne (SVR) serait d'aussi bons candidats.
+Nous calibrons chaque modèle sur 35 années "train", et nous le testons sur 3 années "test". Cette démarche est réalisée plusieurs fois (en général 10), et on compare le RMSE moyen. Le modèle présenté ci-dessus est le meilleur que nous ayons trouvé. D'autres modèles seraient des bon candidats.
 
 \subsection*{Tests de modèles}
 
-De multiples modèles (linéaires, procédure par noyau, arbre de décisions...) ont été calibrés. Les efforts se sont ensuite concentrés sur les 4 meilleurs modèles décrits ci-dessus.
+De multiples méthodes de régressions (linéaires, arbre de décisions, regression Ridge, régression SVR) ont été calibrés. Les efforts se sont ensuite concentrés sur les 4 meilleurs modèles décrits ci-dessus.
 
 \subsection*{Tests des variables}
 
-L'ajout de nouvelles variables (obtenues par combinaison de celles fournies) a été essayé. Ces variables sont:
-\begin{enumerate}
-\item[Température moyenne] $Tm\_i = \frac{Tx\_i + Tn\_i}{2}$ pour $i \in [[1;9]]$
-\item[Température moyenne annuelle] $Tm\_4\_9 = \frac{Tx\_i + Tn\_i}{2}$
-\end{enumerate}
+Toutes les variables utilisées (sauf IRR) ont aussi été élevées au carré, afin de tester des modèles quadratiques. Cela double doc le nombre de variables d'entrée.
 
-Nous avons aussi essayé d'ajouter le carré de toutes les variables (excepté IRR) en tant que nouvelles variables.
+Plusieurs jeux de variables d'entrées: avec les variables élevées au carrées, seulement les variable d'origines, ou encore un nombre restreint de variables.
+
 
 \subsection*{Tests de réduction du nombre de variables}
 
 Des tests de réduction de nombre de variables ont été réalisés:
 \begin{itemize}
-\item Nous avons essayé de réalisé des ACPs sur nos données et d'utiliser les axes les plus explicatifs comme variables d'entrée des modèles
-\item Nous avons essayer des combinaisons de variables "à la main", basé sur la littérature ou des envies personnelles.
+\item Nous avons essayé de réaliser des ACPs sur nos données et d'utiliser les axes les plus explicatifs comme variables d'entrée des modèles.
 \item Nous n'avons pas pu procéder à un test de réduction de variables systématique par manque de temps de calcul informatique.
 \end{itemize}
 
 \subsection*{Calibration du modèle sur des données agrégées}
 
-Avec pour but de réduire le bruit autour des variables, nous avons essayé de calibrer les modèles sur des variables agrégées à l'échelle de la France. Dans ce cas là, nous avons construit notre jeux de données d'entrée en faisant les moyennes de chaque ligne ayant la même année, pour chaque variable. Cela entraine une réduction considérable du nombre de point, ous n'avons testé cette méthode que sur un nombre de variable d'entrée réduit.
+Avec pour but de réduire le bruit autour des variables, nous avons essayé de calibrer les modèles sur des variables agrégées à l'échelle de la France. Dans ce cas là, nous avons construit notre jeux de données d'entrée en faisant les moyennes de chaque ligne ayant la même année, pour chaque variable. Cela entraine une réduction considérable du nombre de point, nous n'avons testé cette méthode que sur un nombre de variable d'entrée réduit.
 
 \section*{Description du dossier de code}
 
-
+Le dossier fourni contient les différents fichiers et dossiers:
+\begin{itemize}
+\item "./predict.py" contient le fichier qui lance le modèle. Vous devez changer le PATH ici
+\item "./tools.py" contient des fonctions utilisées dans "./predict.py". Vous devez changer le PATH ici
+\item "./tools.py" importe des fonctions de "sklearn" pour les utiliser avec "pykernel"
+\item "./kernel/" contient le package "pykernel"
+\item "./data/" contient les jeux de donnée fournies ainsi que les résultats. Nous n'étions pas d'accord sur comment interpréter la forme du fichier de rendu demandé, nous en avons donc fournit deux (qui contiennent les mêmes données). Nous avons rajouté un nom de colonne i dans le fichier "train" pour nommer la colonne index des lignes.
+\end{itemize}
 
 
 \section*{Conclusion}
 
-C'est une expérience très étrange de chercher à améliorer son modèle trouvé du premier coup, sans jamais y parvenir. 
+C'est une expérience très étrange de chercher à améliorer son modèle trouvé (presque) du premier coup, sans jamais y parvenir. Nous n'avons pas creusé très profond les combinaisons de variables qui font sens, la sélection de variables, l'amélioration des modèles statistiques un par un, cela pourrait être des pistes d'amélioration.
 
 
 %\section*{Remerciements}
