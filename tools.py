@@ -15,7 +15,7 @@ if os.name == 'posix':
 if os.name == 'posix':
     project_path = os.getcwd()
 else:
-    project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
+    project_path = 'C:/Users/Victor/Documents/programmes/blemais/envoie'
     sys.path.append(project_path)
     sys.path.append(project_path+'/regressions')
 
@@ -23,13 +23,14 @@ else:
 
 #### 2. usedull functions
 
-
+# load a data file
 def loadData(filename):
     PDmaize = pd.read_table(os.path.join(project_path, "data", filename))
     ind2name = list(PDmaize)
     name2ind = {i:j for j,i in enumerate(ind2name)}
     return np.array(PDmaize), ind2name, name2ind
     
+# add a column to a dataset
 def addColumn(arr, ind2name, name2ind, name, column):
     column=np.transpose(np.array([column]))
     ind2name.append(name)
@@ -37,12 +38,14 @@ def addColumn(arr, ind2name, name2ind, name, column):
     arr = np.concatenate((arr, column), axis=1)
     return arr, ind2name, name2ind
 
-
+# compute the "Déficits hydriques mensuels"
 def addDE(maize, ind2name, name2ind, RUM=10, name=False):
     if type(name) != type(""):
         name = str(RUM)    
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind,  "RU" + name + "_1", np.array([RUM for i in range(len(maize))]))
-    
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind,  "DE" + name + "_1", np.array([0 for i in range(len(maize))]))
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind,  "ETR" + name + "1", maize[:,name2ind["ETP_1"]])
+
     for i in range(2,10):
         colRU = "RU" + name + "_" + str(i)
         colRU1 = "RU" + name + "_" + str(i - 1)
@@ -56,23 +59,35 @@ def addDE(maize, ind2name, name2ind, RUM=10, name=False):
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colRU, np.minimum(maize[:,name2ind[colRU1]] + maize[:,name2ind[colPR]] - maize[:,name2ind[colETP]],RUM)*(1 - DE) + DE*np.maximum(maize[:,name2ind[colRU1]]*np.exp((maize[:,name2ind[colPR]] - maize[:,name2ind[colETP]])/RUM),0))
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colETR, DE*(maize[:,name2ind[colRU1]] + maize[:,name2ind[colPR]] - maize[:,name2ind[colRU]]) + (1-DE)*(maize[:,name2ind[colETP]]))
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colDE, maize[:,name2ind[colETP]] - maize[:,name2ind[colETR]])
-        
+    
+    colRU = "RU" + name + "_" + str(1)
+    colETR = "ETR" + name + str(1)
+    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+    for i in range(2,10):
+        colRU = "RU" + name + "_" + str(i)
+        colETR = "ETR" + name + str(i)
+        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+    
     return maize, ind2name, name2ind
 
-
+# Compute the"Températures moyennes mensuelles"
 def addTm(maize, ind2name, name2ind):
     for i in range(1,10):
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "Tm_" + str(i), (maize[:,name2ind["Tn_" + str(i)]] + maize[:,name2ind["Tx_" + str(i)]])/2 )        
     return maize, ind2name, name2ind
 
+# compute the "Growth Deree Day mensuels"
 def addGDD(maize, ind2name, name2ind, baseGDD=5, GDDname=False):
     if type(GDDname) != type(""):
         GDDname = "GDD" + str(baseGDD)
     for i in range(1,10):
-        maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, GDDname + "_" + str(i), np.maximum(maize[:,name2ind["Tx_" + str(i)]]-5,5))        
-    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, GDDname + "_49", maize[:,name2ind[GDDname + "_4"]]+maize[:,name2ind[GDDname + "_5"]]+maize[:,name2ind[GDDname + "_6"]]+maize[:,name2ind[GDDname + "_7"]]+maize[:,name2ind[GDDname + "_8"]]+maize[:,name2ind[GDDname + "_9"]])
+        maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, GDDname + "_" + str(i), np.maximum(maize[:,name2ind["Tm_" + str(i)]]-5,5)*30)        
+    maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, GDDname + "_4_9", maize[:,name2ind[GDDname + "_4"]]+maize[:,name2ind[GDDname + "_5"]]+maize[:,name2ind[GDDname + "_6"]]+maize[:,name2ind[GDDname + "_7"]]+maize[:,name2ind[GDDname + "_8"]]+maize[:,name2ind[GDDname + "_9"]])
     return maize, ind2name, name2ind
 
+# compute the aggregated variables
 def addVarAn(maize, ind2name, name2ind):
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "Tm_4_9", (maize[:,name2ind["Tm_4"]] + maize[:,name2ind["Tm_5"]] + maize[:,name2ind["Tm_6"]]+maize[:,name2ind["Tm_7"]] + maize[:,name2ind["Tm_8"]] + maize[:,name2ind["Tm_9"]])/6)
     maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "PR_4_9", (maize[:,name2ind["PR_4"]] + maize[:,name2ind["PR_5"]] + maize[:,name2ind["PR_6"]]+maize[:,name2ind["PR_7"]] + maize[:,name2ind["PR_8"]] + maize[:,name2ind["PR_9"]]))
@@ -81,7 +96,7 @@ def addVarAn(maize, ind2name, name2ind):
     return maize, ind2name, name2ind
 
 
-
+#delete a variable from a dataset
 def delVar(x, xind2name, xname2ind, name):
     if isinstance(name,list):
         for n in name:
@@ -96,14 +111,14 @@ def delVar(x, xind2name, xname2ind, name):
         # del xname2ind[name]
     return x, xind2name, xname2ind
 
-
+# allow to subset a dataset from a bigger one
 def selVar(x, xind2name, xname2ind, name):
     x = x[:,np.array([xname2ind[n] for n in name],dtype=np.int)]
     xind2name = name
     xname2ind = {n : xname2ind[n] for n in name}
     return x, xind2name, xname2ind
     
-    
+# split the data along the year to have one train dataset and one test dataset
 def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     random.seed(seed)
     sel_year=np.array(list(set(year)))
@@ -117,7 +132,7 @@ def splitTestYear(x, y, year, nb_year=4, seed=0, n=0):
     y_train = y[np.asarray([(i in year_train) for i in year])]
     return x_train, x_test, y_train, y_test
 
-
+# split the data along the year to have one train dataset and one test dataset (with year data in the return)
 def splitTestYear2(x, y, year, nb_year=4, seed=0, n=0):
     random.seed(seed)
     sel_year=np.array(list(set(year)))

@@ -16,19 +16,17 @@ from copy import copy
 #from sklearn.exceptions import FutureWarning
 
 # 1.2) need to change PATH here
-if os.name == 'posix':
-    project_path = os.getcwd()
-    # project_path_regressions = os.path.join(project_path, "regressions")
-else:
-    project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
-    sys.path.append(project_path)
-    sys.path.append(os.path.join(project_path, "regressions"))
-    project_path_regressions = os.path.join(project_path, "regressions")
+
+project_path = 'C:/Users/Victor/Documents/programmes/Github/blemais'
+sys.path.append(project_path)
+sys.path.append(os.path.join(project_path, "regressions"))
+project_path_regressions = os.path.join(project_path, "regressions")
 
 # 1.3) import our homemade modules
+
 from tools import *
-from regressions.regressions import *
-from multi_armed_bandit.multi_armed_bandit import *
+#from regressions.regressions import *
+#from multi_armed_bandit.multi_armed_bandit import *
 
 
 
