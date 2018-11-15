@@ -30,8 +30,8 @@ else:
 
 # 1.3) import our homemade modules
 from tools import *
-from regressions.regressions import *
-from multi_armed_bandit.multi_armed_bandit import *
+# from regressions.regressions import *
+# from multi_armed_bandit.multi_armed_bandit import *
 
 
 
@@ -205,14 +205,11 @@ all_data = [(x,y,year), (x_reduced,y,year), (x_lobell,y,year), (x_lobell2,y,year
 
 
 
-
-
-
 import numpy as np
 
 
 from blocks.utils.base import *
-from blocks.utils.custom import *
+# from blocks.utils.custom import *
 from blocks.utils.redirect import *
 from blocks.dataset.matrix_dataset import *
 from blocks.dataset.split_dataset import *
@@ -253,33 +250,33 @@ def load(filepath):
 
 
 
-class Repeat(Custom_Input_Block):
-    def __init__(self, input_block, repeat_times):
-        super(Repeat, self).__init__(input_block)
-        self.repeat_times = repeat_times
+# class Repeat(Custom_Input_Block):
+#     def __init__(self, input_block, repeat_times):
+#         super(Repeat, self).__init__(input_block)
+#         self.repeat_times = repeat_times
         
-    def custom_compute(self):
-        output = []
-        for x in xrange(self.repeat_times):
-            output.append(self._input_block())
-        return output
+#     def custom_compute(self):
+#         output = []
+#         for x in xrange(self.repeat_times):
+#             output.append(self._input_block())
+#         return output
 
 
-class Mean(Custom_Input_Block):
-    def custom_compute(self):
-        return np.mean(self._input_block(), axis=0)
+# class Mean(Custom_Input_Block):
+#     def custom_compute(self):
+#         return np.mean(self._input_block(), axis=0)
 
-class Select_Train(Custom_Input_Block):
-    def custom_compute(self):
-        return self._input_block()[0]
+# class Select_Train(Custom_Input_Block):
+#     def custom_compute(self):
+#         return self._input_block()[0]
 
-class Select_Test(Custom_Input_Block):
-    def custom_compute(self):
-        return self._input_block()[1]
+# class Select_Test(Custom_Input_Block):
+#     def custom_compute(self):
+#         return self._input_block()[1]
 
-class Add_Time(Custom_Block):
-    def custom_compute(self):
-        return self._input_block[0]() + [self.input_block[1].time]
+# class Add_Time(Custom_Block):
+#     def custom_compute(self):
+#         return self._input_block[0]() + [self.input_block[1].time]
 
 
 
@@ -353,33 +350,409 @@ from sklearn.svm import SVR
 
 
 
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+
+
+
+
+# # # all_data = load("blocks/all_data.npy")
+# # # normal, reduced, lobell, lobell2, an, squared
+# # idat = 0
+
+# lb = []
+
+# # d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
+# # y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+# # lb.append(d)
+
+# yy = Select_Train(Matrix_Dataset(year, None))
+
+# d = []
+# #d += [Matrix_Dataset(x, y)]
+# d += [Matrix_Dataset(x, y)]
+# d += [Matrix_Dataset(x_lobell, y)]
+# d += [Matrix_Dataset(x_an, y)]
+# d += [Matrix_Dataset(x_origin, y)]
+# d += [Matrix_Dataset(x_originsqrd, y)]
+# d += [Matrix_Dataset(x_squared, y)]
+
+# sd = Select_Output(d, 0)
+# lb.append(sd)
+
+# # s = Split_Dataset(d, test_size=0.1)
+# # lb.append(s)
+
+# #ss = Split_Dataset_N_Parts(d, 10, seed=0)
+# #lb.append(s)
+
+# s = Non_Uniform_Split_Dataset_N_Parts(sd, yy, 10, seed=0)
+# lb.append(s)
+
+# j = Join_Dataset_N_Parts(lb[-1], index=0)
+# lb.append(j)
+
+# sc = Scaler_x(lb[-1])
+# lb.append(sc)
+
+# r = []
+# # r += [Regressor(lb[-1], regressor=LinearRegression)]
+# # r += [Regressor(lb[-1], regressor=Ridge)]
+# # r += [Regressor(lb[-1], regressor=MultiTaskElasticNet)]
+# # r += [Regressor(lb[-1], regressor=ARDRegression)]
+# # r += [Regressor(lb[-1], regressor=RandomForestRegressor)]
+# # r += [Regressor(lb[-1], regressor=SVR)]
+# # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())]
+# # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=Tanimoto())]
+# for reg in all_regressors:
+#     if reg().get_params().has_key("kernel"):
+#         for ker in all_kernels:
+#             if isinstance(ker, str):
+#                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker))
+#             else:
+#                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker()))
+#     else:
+#         r.append(Regressor(lb[-1], regressor=reg))
+# lb += r
+
+# so = Select_Output(r, 0)
+# lb.append(so)
+# t = Measure_Time(lb[-1])
+# lb.append(t)
+# # sn = Snapshot_Attributes(lb[-1], "time")
+# # lb.append(sn)
+# def verbose_func():
+#     print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5} : {}".format(s.seed, round(p.output[0],3), round(p.output[1],3), round(t.time,3), str(sd.index) + " " + r[so.index].name)
+
+# def error_func():
+#     print "Regression error : {}".format(r[so.index].name)
+#     return [100, 100, 10, sd.index, so.index]
+
+# def timeout_func():
+#     print "Regression timed out : {}".format(r[so.index].name)
+#     return [100, 100, 10, sd.index, so.index]
+
+# # v = Verbose_(Prediction_Error_L2(lb[-1]), func2)
+# # lb.append(v)
+# p = Prediction_Error_L2(lb[-1])
+# lb.append(p)
+# # sl = Select_Test(lb[-1])
+# # lb.append(sl)
+
+# v = Verbose(lb[-1], verbose_func, force=True)
+# lb.append(v)
+
+# class Add_Values(Custom_Input_Block):
+#     def custom_compute(self):
+#         return self._input_block() + [t.time, sd.index, so.index]
+
+# ad = Add_Values(lb[-1])#, [(t, "time"), (sd, "index"), (so, "index")])
+# lb.append(ad)
+
+# to = Timeout(lb[-1], seconds=5, default_func=timeout_func)
+# lb.append(to)
+# e = Ignore_Exception(lb[-1], exception=[ValueError, TypeError], default_func=error_func)
+# lb.append(e)
+
+# # sl = Redirect_To_Test(lb[-1])
+# # lb.append(sl)
+
+# class Nbr_Calls:
+#     def __init__(self, s, so, sd, i, j):
+#         self.n = 0
+#         self.s = s
+#         self.so = so
+#         self.sd = sd
+#         self.i = i
+#         self.j = j
+#     def __call__(self):
+#         #self.s.set_param(seed=self.n)
+#         if self.j == 0:
+#             time.sleep(1)
+#         self.s.set_param(index=self.n)
+#         self.so.set_param(index=self.i)
+#         self.sd.set_param(index=self.j)
+#         self.n += 1
+
+# #f = Run_Function_Before(lb[-1], lambda x=None : setattr(s,"changed_here",True))
+# #f = Run_Function_Before(lb[-1], lambda x=None : s.set_seed(s.seed+1))
+# f = [Run_Function_Before(lb[-1], Nbr_Calls(j, so, sd, i, k), force=True) for i in xrange(len(r)) for k in xrange(len(d))]
+# lb += f
+# # mab = Uniform_MAB(f, 1)
+# mab = Uniform_MAB_Thresholds(f, 10, reward_func=lambda x:x[1], threshold_max=10)
+
+
+
+# def verbose_final():
+#     print("\n\n")
+#     order = np.argsort(mab.mean_rewards)
+#     for i in order:
+#         rewards = mab.raw_rewards[i]
+#         #    for i,rewards in enumerate(mab.raw_rewards):
+#         m_tr, m_te, m_ti, sdi, soi = np.mean(np.asarray(rewards), axis=0).tolist()
+#         s_tr, s_te, s_ti, _, _ = np.std(np.asarray(rewards), axis=0).tolist()
+#         print "train_err : {:<5}+-{:<5},   test_err : {:<5}+-{:<5},   time : {:<5}+-{:<5}   : {} {}".format(round(m_tr,3), round(s_tr,3), round(m_te,3), round(s_te,3), round(m_ti,3), round(s_ti,3), int(round(sdi)), r[int(round(soi))].name)
+
+
+# fv = Verbose(mab, verbose_final, force=True)
+
+
+
+
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
 
 
 
 
 
-# all_data = load("blocks/all_data.npy")
-# normal, reduced, lobell, lobell2, an, squared
-idat = 0
+
+# # all_data = load("blocks/all_data.npy")
+# # normal, reduced, lobell, lobell2, an, squared
+# idat = 0
+
+# lb = []
+
+# # d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
+# # y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+# # lb.append(d)
+
+# yy = Select_Train(Matrix_Dataset(year, None))
+
+# # d = []
+# # #d += [Matrix_Dataset(x, y)]
+# # d += [Matrix_Dataset(x, y)]
+# # d += [Matrix_Dataset(x_lobell, y)]
+# # d += [Matrix_Dataset(x_an, y)]
+# # d += [Matrix_Dataset(x_origin, y)]
+# # d += [Matrix_Dataset(x_originsqrd, y)]
+# # d += [Matrix_Dataset(x_squared, y)]
+
+# d = Matrix_Dataset(x_origin, y)
+# lb.append(d)
+
+# # sd = Select_Output(d, 0)
+# # lb.append(sd)
+
+# # s = Split_Dataset(d, test_size=0.1)
+# # lb.append(s)
+
+# #ss = Split_Dataset_N_Parts(d, 10, seed=0)
+# #lb.append(s)
+
+# s = Non_Uniform_Split_Dataset_N_Parts(d, yy, 38, seed=0)
+# lb.append(s)
+
+# # iidep = 0
+
+# # class Select_I(Custom_Input_Block):
+# #     def custom_compute(self):
+# #         return [self._input_block()[iii], self._input_block()[iidep]]
+
+# # class BlaBlaBla(Custom_Input_Block):
+# #     def custom_train(self):
+# #         self.output_train = self.input_block()[0]
+# #     def custom_test(self):
+# #         self.output_test = self.input_block()[1]
+# #     def custom_call(self):
+# #         self.output =  self.input_block()
+
+    
+# # si = Select_I(lb[-1])
+# # lb.append(si)
+# # bb = BlaBlaBla(lb[-1])
+# # lb.append(bb)
+
+# j = Join_Dataset_N_Parts(lb[-1], index=0)
+# lb.append(j)
+
+# sc = Scaler_x(lb[-1])
+# lb.append(sc)
+
+# r = Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=RBF())
+# lb.append(r)
+# t = Measure_Time(lb[-1])
+# lb.append(t)
+
+# plt.scatter(sc.test()[1], t.test(), s=1)
+# plt.show()    
+
+# 1/0
+
+
+# # p = Prediction_Error_L2(lb[-1], average=False)
+# # lb.append(p)
+
+
+# vals = []
+
+# for iii in range(38):
+#     si.set_changed_here(True)
+#     vals.append(t.test())
+
+
+# for v in vals:
+#     plt.scatter(v, vals[iidep], s=1)
+# plt.show()    
+
+# 1/0
+# j = Join_Dataset_N_Parts(lb[-1], index=0)
+# lb.append(j)
+
+# sc = Scaler_x(lb[-1])
+# lb.append(sc)
+
+# # r = []
+# #r = Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())
+# r = Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=RBF())
+
+# # r += [Regressor(lb[-1], regressor=LinearRegression)]
+# # r += [Regressor(lb[-1], regressor=Ridge)]
+# # r += [Regressor(lb[-1], regressor=MultiTaskElasticNet)]
+# # r += [Regressor(lb[-1], regressor=ARDRegression)]
+# # r += [Regressor(lb[-1], regressor=RandomForestRegressor)]
+# # r += [Regressor(lb[-1], regressor=SVR)]
+# # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())]
+# # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=Tanimoto())]
+# # for reg in all_regressors:
+# #     if reg().get_params().has_key("kernel"):
+# #         for ker in all_kernels:
+# #             if isinstance(ker, str):
+# #                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker))
+# #             else:
+# #                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker()))
+# #     else:
+# #         r.append(Regressor(lb[-1], regressor=reg))
+# lb.append(r)
+
+# # so = Select_Output(r, 0)
+# # lb.append(so)
+# t = Measure_Time(lb[-1])
+# lb.append(t)
+# # sn = Snapshot_Attributes(lb[-1], "time")
+# # lb.append(sn)
+# def verbose_func():
+#     print "{:<2} : train_err : {:<5}, test_err : {:<5}, time : {:<5} : {}".format(j.index, round(p.output[0],3), round(p.output[1],3), round(t.time,3), r.name)
+
+# def error_func():
+#     print "Regression error : {}".format(r.name)
+#     return [100, 100, 10]
+
+# def timeout_func():
+#     print "Regression timed out : {}".format(r.name)
+#     return [100, 100, 10]
+
+# # v = Verbose_(Prediction_Error_L2(lb[-1]), func2)
+# # lb.append(v)
+# p = Prediction_Error_L2(lb[-1])
+# lb.append(p)
+# # sl = Select_Test(lb[-1])
+# # lb.append(sl)
+
+# v = Verbose(lb[-1], verbose_func, force=True)
+# lb.append(v)
+
+# class Add_Values(Custom_Input_Block):
+#     def custom_compute(self):
+#         return self._input_block() + [t.time]
+
+# ad = Add_Values(lb[-1])#, [(t, "time"), (sd, "index"), (so, "index")])
+# lb.append(ad)
+
+# to = Timeout(lb[-1], seconds=5, default_func=timeout_func)
+# lb.append(to)
+# e = Ignore_Exception(lb[-1], exception=[ValueError, TypeError], default_func=error_func)
+# lb.append(e)
+
+# # sl = Redirect_To_Test(lb[-1])
+# # lb.append(sl)
+
+# class Nbr_Calls:
+#     def __init__(self, s):
+#         self.n = 0
+#         self.s = s
+#         # self.so = so
+#         # self.sd = sd
+#         # self.i = i
+#         # self.j = j
+#     def __call__(self):
+#         #self.s.set_param(seed=self.n)
+#         # if self.j == 0:
+#         #     time.sleep(1)
+#         self.s.set_param(index=self.n)
+#         # self.so.set_param(index=self.i)
+#         # self.sd.set_param(index=self.j)
+#         self.n += 1
+
+# #f = Run_Function_Before(lb[-1], lambda x=None : setattr(s,"changed_here",True))
+# #f = Run_Function_Before(lb[-1], lambda x=None : s.set_seed(s.seed+1))
+# f = Run_Function_Before(lb[-1], Nbr_Calls(j), force=True)
+# lb.append(f)
+# # mab = Uniform_MAB(f, 1)
+# mab = Uniform_MAB_Thresholds(f, 10, reward_func=lambda x:x[1], threshold_max=10)
+
+
+
+# def verbose_final():
+#     print("\n\n")
+#     order = np.argsort(mab.mean_rewards)
+#     for i in order:
+#         rewards = mab.raw_rewards[i]
+#         #    for i,rewards in enumerate(mab.raw_rewards):
+#         m_tr, m_te, m_ti = np.mean(np.asarray(rewards), axis=0).tolist()
+#         s_tr, s_te, s_ti = np.std(np.asarray(rewards), axis=0).tolist()
+#         print "train_err : {:<5}+-{:<5},   test_err : {:<5}+-{:<5},   time : {:<5}+-{:<5}   : {}".format(round(m_tr,3), round(s_tr,3), round(m_te,3), round(s_te,3), round(m_ti,3), round(s_ti,3), r.name)
+
+
+# fv = Verbose(mab, verbose_final, force=True)
+
+
+
+
+
+
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+
+
+
+# all_data = load("all_data.npy")
+# # normal, reduced, lobell, lobell2, an, squared
+# idat = 0
 
 lb = []
 
-# d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
-# y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
-# lb.append(d)
+# # d = Matrix_Dataset(all_data[idat][0], all_data[idat][1])
+# # y = Select_Train(Matrix_Dataset(all_data[idat][2], None))
+# # lb.append(d)
 
-yy = Select_Train(Matrix_Dataset(year, None))
+# x, y, year = all_data[0]
+# x_lobell, y, year = all_data[1]
+# x_an, y, year = all_data[2]
+# x_origin, y, year = all_data[3]
+# x_originsqrd, y, year = all_data[4]
+# x_squared, y, year = all_data[5]
+
+#yy = Select_Train(Matrix_Dataset(year, None))
 
 d = []
-#d += [Matrix_Dataset(x, y)]
-d += [Matrix_Dataset(x, y)]
-d += [Matrix_Dataset(x_lobell, y)]
-d += [Matrix_Dataset(x_an, y)]
+# d += [Matrix_Dataset(x, y)]
+# d += [Matrix_Dataset(x_lobell, y)]
+# d += [Matrix_Dataset(x_an, y)]
 d += [Matrix_Dataset(x_origin, y)]
-d += [Matrix_Dataset(x_originsqrd, y)]
-d += [Matrix_Dataset(x_squared, y)]
+# d += [Matrix_Dataset(x_originsqrd, y)]
+# d += [Matrix_Dataset(x_squared, y)]
 
-sd = Select_Output(d, 0)
+sd = Select_Block(d, 0)
 lb.append(sd)
 
 # s = Split_Dataset(d, test_size=0.1)
@@ -388,7 +761,7 @@ lb.append(sd)
 #ss = Split_Dataset_N_Parts(d, 10, seed=0)
 #lb.append(s)
 
-s = Non_Uniform_Split_Dataset_N_Parts(sd, yy, 10, seed=0)
+s = Non_Uniform_Split_Dataset_N_Parts(sd, year, 10, seed=0)
 lb.append(s)
 
 j = Join_Dataset_N_Parts(lb[-1], index=0)
@@ -399,6 +772,17 @@ lb.append(sc)
 
 r = []
 # r += [Regressor(lb[-1], regressor=LinearRegression)]
+# r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=Cauchy())]
+# r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=RBF())]
+# r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=Tanimoto())]
+# r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=Exponential())]
+
+r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=RBF())]
+r += [Kernel_Regressor(lb[-1], regressor=KernelRidge, kernel=Cauchy())]
+r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())]
+
+
+# r += [Regressor(lb[-1], regressor=LinearRegression)]
 # r += [Regressor(lb[-1], regressor=Ridge)]
 # r += [Regressor(lb[-1], regressor=MultiTaskElasticNet)]
 # r += [Regressor(lb[-1], regressor=ARDRegression)]
@@ -406,18 +790,32 @@ r = []
 # r += [Regressor(lb[-1], regressor=SVR)]
 # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=RBF())]
 # r += [Kernel_Regressor(lb[-1], regressor=SVR, kernel=Tanimoto())]
-for reg in all_regressors:
-    if reg().get_params().has_key("kernel"):
-        for ker in all_kernels:
-            if isinstance(ker, str):
-                r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker))
-            else:
-                r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker()))
-    else:
-        r.append(Regressor(lb[-1], regressor=reg))
+# for reg in all_regressors:
+#     if reg().get_params().has_key("kernel"):
+#         for ker in all_kernels:
+#             if isinstance(ker, str):
+#                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker))
+#             else:
+#                 r.append(Kernel_Regressor(lb[-1], regressor=reg, kernel=ker()))
+#     else:
+#         r.append(Regressor(lb[-1], regressor=reg))
+
+class Average(Base_Inputs_Block):
+    def compute(self):
+        inp = self._input_block_()
+        if isinstance(inp, tuple) or isinstance(inp, list):
+            return [np.mean(np.asarray(x), axis=0) for x in zip(*self._input_block_())]
+        else:
+            return np.mean(self._input_block_(), axis=0)
+            
+
+av = Average(r[0:4])
+# lb.append(av)
+r.append(av)
+
 lb += r
 
-so = Select_Output(r, 0)
+so = Select_Block(r, 0)
 lb.append(so)
 t = Measure_Time(lb[-1])
 lb.append(t)
@@ -436,7 +834,7 @@ def timeout_func():
 
 # v = Verbose_(Prediction_Error_L2(lb[-1]), func2)
 # lb.append(v)
-p = Prediction_Error_L2(lb[-1])
+p = Prediction_Error_L2(lb[-1], Train_Test(Select_Target(sc)))
 lb.append(p)
 # sl = Select_Test(lb[-1])
 # lb.append(sl)
@@ -444,9 +842,9 @@ lb.append(p)
 v = Verbose(lb[-1], verbose_func, force=True)
 lb.append(v)
 
-class Add_Values(Custom_Input_Block):
-    def custom_compute(self):
-        return self._input_block() + [t.time, sd.index, so.index]
+class Add_Values(Base_Input_Block):
+    def compute(self):
+        return self._input_block_() + [t.time, sd.index, so.index]
 
 ad = Add_Values(lb[-1])#, [(t, "time"), (sd, "index"), (so, "index")])
 lb.append(ad)
@@ -468,12 +866,12 @@ class Nbr_Calls:
         self.i = i
         self.j = j
     def __call__(self):
-        #self.s.set_param(seed=self.n)
+        #self.s.set_params(seed=self.n)
         if self.j == 0:
             time.sleep(1)
-        self.s.set_param(index=self.n)
-        self.so.set_param(index=self.i)
-        self.sd.set_param(index=self.j)
+        self.s.set_params(index=self.n)
+        self.so.set_params(index=self.i)
+        self.sd.set_params(index=self.j)
         self.n += 1
 
 #f = Run_Function_Before(lb[-1], lambda x=None : setattr(s,"changed_here",True))
@@ -495,5 +893,5 @@ def verbose_final():
         s_tr, s_te, s_ti, _, _ = np.std(np.asarray(rewards), axis=0).tolist()
         print "train_err : {:<5}+-{:<5},   test_err : {:<5}+-{:<5},   time : {:<5}+-{:<5}   : {} {}".format(round(m_tr,3), round(s_tr,3), round(m_te,3), round(s_te,3), round(m_ti,3), round(s_ti,3), int(round(sdi)), r[int(round(soi))].name)
 
-
 fv = Verbose(mab, verbose_final, force=True)
+
