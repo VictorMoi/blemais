@@ -216,7 +216,7 @@ Les packages "numpy", "panda", et "matplotlib" ont été utilisés pour la manip
 
 Le package "sklearn" est disponible à cette adresse: https://scikit-learn.org/stable/. Il s'agit d'un package regroupant de nombreux modèles de régression par apprentissage classiques: régressions linéaire, ridge, SVM entre autre. D'autres fonctionnalités de réductions du nombre de variables, de transformation des données, ou encore de réalisation de l'astuce du noyau sont aussi implémentées.
  
-Le package "pykernel" a été récupéré à cette adresse: https://github.com/gmum/pykernels . Il a été légèrement modifié (gestion du PATH). Il est donc fourni dans le code envoyé. Il s'agit d'un package fournissant des fonctions de noyau non implémenté dans sklearn. Nous avons codés des fonctions permettant d'utiliser les noyaux de pykernel dans les méthodes de régression par noyau de sklearn.
+Le package "pykernel" a été récupéré à cette adresse: https://github.com/gmum/pykernels. Il a été légèrement modifié (gestion du PATH). Il est donc fourni dans le code envoyé. Il s'agit d'un package fournissant des fonctions de noyau non implémentées dans sklearn. Nous avons codés des fonctions permettant d'utiliser les noyaux de pykernel dans les méthodes de régression à noyaux de sklearn.
 
 \subsection*{Variables utilisées}
 
@@ -312,17 +312,17 @@ Au final, les variables mises en entrée des modèles sont les suivantes (sous l
 
 \subsubsection*{Variable de sortie}
 
-La variable réponse du modèle est la variable "yield\_anomaly", centrée réduite. Les modèles sont donc calibrées avec une variable yield\_anomaly centrée réduite. Les prédictions du modèles sont donc dénormalisées avant d'être exportées.
+La variable réponse du modèle est la variable "yield\_anomaly", centrée réduite. Les modèles sont donc calibrées avec une variable yield\_anomaly centrée réduite. Les prédictions des modèles sont donc dénormalisées avant d'être exportées.
 
 
 \subsection*{Nature du modèle}
 
 Quatre modèles sont calibrés pour les variables décrites ci-dessus :
 \begin{itemize}
-\item Une régression Ridge après application d'une astuce du noyau avec le noyau RBF
-\item Une régression Ridge après application d'une astuce du noyau avec le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
-\item Une régression Ridge après application d'une astuce du noyau avec le noyau de Cauchy
-\item Une régression Ridge après application d'une astuce du noyau avec le noyau exponentiel
+\item Une régression Ridge en utilisant le noyau RBF
+\item Une régression Ridge en utilisant le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
+\item Une régression Ridge en utilisant le noyau de Cauchy
+\item Une régression Ridge en utilisant le noyau exponentiel
 \end{itemize}
 
 Chacun des quatre modèles fournit une prédiction, la valeur retenue est la moyenne de ces quatre prédictions.
