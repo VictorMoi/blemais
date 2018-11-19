@@ -1,6 +1,10 @@
 blocks/*
 blocks2/*
 data/*
+envoie/kernels/*
+envoie/kernels
+envoie/data/*
+envoie/data
 rapport/rapport.aux
 rapport/rapport.log
 rapport/rapport.out

@@ -317,12 +317,12 @@ La variable réponse du modèle est la variable "yield\_anomaly", centrée rédu
 
 \subsection*{Nature du modèle}
 
-Quatre modèles sont calibrés pour les variables décrites ci-dessus :
+Quatre modèles sont calibrés pour les variables décrites ci-dessus. Les paramètres interne à chaque modèle ont été ajustés à la main. 
 \begin{itemize}
-\item Une régression Ridge en utilisant le noyau RBF
-\item Une régression Ridge en utilisant le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
-\item Une régression Ridge en utilisant le noyau de Cauchy
-\item Une régression Ridge en utilisant le noyau exponentiel
+\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau RBF ($\gamma = 0,0025$)
+\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
+\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau de Cauchy ($\sigma = 0,0025$)
+\item Une régression Ridge ($\alpha = 0,15$) en utilisant le noyau exponentiel ($\sigma = 8.5$)
 \end{itemize}
 
 Chacun des quatre modèles fournit une prédiction, la valeur retenue est la moyenne de ces quatre prédictions.
