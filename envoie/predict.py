@@ -74,6 +74,9 @@ sel = ['ETP_1','ETP_2','ETP_3','ETP_4','ETP_5','ETP_6','ETP_7','ETP_8','ETP_9',
 'SeqPR_1','SeqPR_2','SeqPR_3','SeqPR_4','SeqPR_5','SeqPR_6','SeqPR_7','SeqPR_8','SeqPR_9',
 'Tn_1','Tn_2','Tn_3','Tn_4','Tn_5','Tn_6','Tn_7','Tn_8','Tn_9',
 'Tx_1','Tx_2','Tx_3','Tx_4','Tx_5','Tx_6','Tx_7','Tx_8','Tx_9',
+'Tm_1','Tm_2','Tm_3','Tm_4','Tm_5','Tm_6','Tm_7','Tm_8','Tm_9',
+'ETR101','ETR102','ETR103','ETR104','ETR105','ETR106','ETR107','ETR108','ETR109',
+'RU10_1','RU10_2','RU10_3','RU10_4','RU10_5','RU10_6','RU10_7','RU10_8','RU10_9',
 'DE10_1','DE10_2','DE10_3','DE10_4','DE10_5','DE10_6','DE10_7','DE10_8','DE10_9',
 'GDD5_1','GDD5_2','GDD5_3','GDD5_4','GDD5_5','GDD5_6','GDD5_7','GDD5_8','GDD5_9',
 'GDD5_4_9','DE_4_9','Tm_4_9','PR_4_9','RV_4_9',
@@ -89,15 +92,23 @@ scaler_y = preprocessing.StandardScaler().fit(y_train[:,np.newaxis])
 
 x_train_s = copy(x_train)
 x_train_s = scaler_x.transform(x_train_s)
+
 y_train_s = copy(y_train)
 y_train_s = scaler_y.transform(y_train_s[:,np.newaxis])[:,0]
 
-
 #### 4. Fitting the model
 
-reg = Regression_With_Custom_Kernel(KernelRidge(), Tanimoto())
+#reg1 = Regression_With_Custom_Kernel(KernelRidge(alpha=2.5), Tanimoto())
+#reg1.fit(x_train_s,y_train_s)
 
-reg.fit(x_train_s,y_train_s)
+#reg2 = Regression_With_Custom_Kernel(KernelRidge(alpha=0.25), Cauchy(sigma=30))
+#reg2.fit(x_train_s,y_train_s)
+
+#reg3 = Regression_With_Custom_Kernel(KernelRidge(alpha=0.15), Exponential(sigma=8.5))
+#reg3.fit(x_train_s,y_train_s)
+
+reg4 = Regression_With_Custom_Kernel(KernelRidge(alpha=0.7), RBF(gamma=0.0025))
+reg4.fit(x_train_s,y_train_s)
 
 
 #### 5. Processing test data
@@ -145,9 +156,12 @@ x_test_s = scaler_x.transform(x_test_s)
 #check names
 xind2name_test == xind2name_train
 
-y_test_s = reg.predict(x_test_s)
-y_test = copy(y_test_s)
-y_test = scaler_y.inverse_transform(y_test[:,np.newaxis])[:,0]
+#y_test_s1 = reg1.predict(x_test_s)
+#y_test_s2 = reg2.predict(x_test_s)
+#y_test_s3 = reg3.predict(x_test_s)
+y_test_s = reg4.predict(x_test_s)
+
+#y_test_s = (y_test_s1 + y_test_s2 + y_test_s3 + y_test_s4)/4
 
 y_test = copy(y_test_s)
 y_test = scaler_y.inverse_transform(y_test[:,np.newaxis])[:,0]

@@ -56,15 +56,15 @@ def addDE(maize, ind2name, name2ind, RUM=10, name=False):
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colETR, DE*(maize[:,name2ind[colRU1]] + maize[:,name2ind[colPR]] - maize[:,name2ind[colRU]]) + (1-DE)*(maize[:,name2ind[colETP]]))
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colDE, maize[:,name2ind[colETP]] - maize[:,name2ind[colETR]])
     
-    colRU = "RU" + name + "_" + str(1)
-    colETR = "ETR" + name + str(1)
-    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
-    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
-    for i in range(2,10):
-        colRU = "RU" + name + "_" + str(i)
-        colETR = "ETR" + name + str(i)
-        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
-        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+#    colRU = "RU" + name + "_" + str(1)
+#    colETR = "ETR" + name + str(1)
+#    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+#    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+#    for i in range(2,10):
+#        colRU = "RU" + name + "_" + str(i)
+#        colETR = "ETR" + name + str(i)
+#        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+#        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
     
     return maize, ind2name, name2ind
 

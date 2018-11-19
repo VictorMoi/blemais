@@ -38,7 +38,7 @@ def addColumn(arr, ind2name, name2ind, name, column):
     arr = np.concatenate((arr, column), axis=1)
     return arr, ind2name, name2ind
 
-# compute the "Déficits hydriques mensuels"
+# compute the "Deficits hydriques mensuels"
 def addDE(maize, ind2name, name2ind, RUM=10, name=False):
     if type(name) != type(""):
         name = str(RUM)    
@@ -60,19 +60,19 @@ def addDE(maize, ind2name, name2ind, RUM=10, name=False):
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colETR, DE*(maize[:,name2ind[colRU1]] + maize[:,name2ind[colPR]] - maize[:,name2ind[colRU]]) + (1-DE)*(maize[:,name2ind[colETP]]))
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, colDE, maize[:,name2ind[colETP]] - maize[:,name2ind[colETR]])
     
-    colRU = "RU" + name + "_" + str(1)
-    colETR = "ETR" + name + str(1)
-    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
-    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
-    for i in range(2,10):
-        colRU = "RU" + name + "_" + str(i)
-        colETR = "ETR" + name + str(i)
-        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
-        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+#    colRU = "RU" + name + "_" + str(1)
+#    colETR = "ETR" + name + str(1)
+#    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+#    maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
+#    for i in range(2,10):
+#        colRU = "RU" + name + "_" + str(i)
+#        colETR = "ETR" + name + str(i)
+#        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colRU)
+#        maize, ind2name, name2ind = delVar(maize, ind2name, name2ind, colETR)
     
     return maize, ind2name, name2ind
 
-# Compute the"Températures moyennes mensuelles"
+# Compute the"Temperatures moyennes mensuelles"
 def addTm(maize, ind2name, name2ind):
     for i in range(1,10):
         maize, ind2name, name2ind = addColumn(maize, ind2name, name2ind, "Tm_" + str(i), (maize[:,name2ind["Tn_" + str(i)]] + maize[:,name2ind["Tx_" + str(i)]])/2 )        

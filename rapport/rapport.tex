@@ -299,6 +299,9 @@ Au final, les variables mises en entrée des modèles sont les suivantes (sous l
 \item SeqPR\_1 à SeqPR\_9
 \item Tn\_1 à Tn\_9
 \item Tx\_1 à Tx\_9
+\item Tm\_1 à Tm\_9
+\item ETR\_1 à ETR\_9
+\item RU\_1 à RU\_9
 \item DE\_1 à DE\_9
 \item GDD\_1 à GDD\_9
 \item IRR
@@ -317,19 +320,14 @@ La variable réponse du modèle est la variable "yield\_anomaly", centrée rédu
 
 \subsection*{Nature du modèle}
 
-Quatre modèles sont calibrés pour les variables décrites ci-dessus. Les paramètres interne à chaque modèle ont été ajustés à la main. 
-\begin{itemize}
-\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau RBF ($\gamma = 0,0025$)
-\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
-\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau de Cauchy ($\sigma = 0,0025$)
-\item Une régression Ridge ($\alpha = 0,15$) en utilisant le noyau exponentiel ($\sigma = 8.5$)
-\end{itemize}
+Un modèle est calibré pour les variables décrites ci-dessus. Les paramètres interne ont été ajustés à la main. Le modèle est une régression Ridge ($\alpha = 0,7$) en utilisant le noyau RBF ($\gamma = 0,0025$).
+
 
 Chacun des quatre modèles fournit une prédiction, la valeur retenue est la moyenne de ces quatre prédictions.
 
 \subsection*{Estimation a priori du RMSE}
 
-Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,799, avec un écart type de 0.374.
+Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,781, avec un écart type de 0,338.
 
 \section*{Recherches et développement du modèle}
 
@@ -341,13 +339,22 @@ Nous calibrons chaque modèle sur 35 années "train", et nous le testons sur 3 a
 
 \subsection*{Tests de modèles}
 
-De multiples méthodes de régressions (linéaires, arbre de décisions, regression Ridge, régression SVR) ont été calibrés. Les efforts se sont ensuite concentrés sur les 4 meilleurs modèles décrits ci-dessus.
+De multiples méthodes de régressions (linéaires, arbre de décisions, regression Ridge, régression SVR) ont été calibrés. Les efforts se sont ensuite concentrés sur les 4 meilleurs modèles décrits ci-dessous.
+
+\begin{itemize}
+\item Une régression Ridge ($\alpha = 0,7$) en utilisant le noyau RBF ($\gamma = 0,0025$)
+\item Une régression Ridge ($\alpha = 2.5$) en utilisant le noyau Tanimoto. Ce noyau a été développé en chimie pour la classification de molécules \citep{lind_support_2003} et a donné de bon résultats.
+\item Une régression Ridge ($\alpha = 0,25$) en utilisant le noyau de Cauchy ($\sigma = 30$)
+\item Une régression Ridge ($\alpha = 0,15$) en utilisant le noyau exponentiel ($\sigma = 8.5$)
+\end{itemize}
+
+Un prédicteur "moyenne" (moyenne des prédictions des 4 modèles décrits ci-dessus) a aussi été testé.
 
 \subsection*{Tests des variables}
 
 Toutes les variables utilisées (sauf IRR) ont aussi été élevées au carré, afin de tester des modèles quadratiques. Cela double doc le nombre de variables d'entrée.
 
-Plusieurs jeux de variables d'entrées: avec les variables élevées au carrées, seulement les variable d'origines, ou encore un nombre restreint de variables.
+Plusieurs jeux de variables d'entrées ont été testés: avec les variables élevées au carrées, seulement les variable d'origines, ou encore un nombre restreint de variables.
 
 
 \subsection*{Tests de réduction du nombre de variables}
@@ -376,7 +383,7 @@ Le dossier fourni contient les différents fichiers et dossiers:
 
 \section*{Conclusion}
 
-C'est une expérience très étrange de chercher à améliorer son modèle trouvé (presque) du premier coup, sans jamais y parvenir. Nous n'avons pas creusé très profond les combinaisons de variables qui font sens, la sélection de variables, l'amélioration des modèles statistiques un par un, cela pourrait être des pistes d'amélioration.
+C'est une expérience très étrange de chercher à améliorer son modèle trouvé (presque) du premier coup, sans jamais y parvenir. Nous n'avons pas creusé très profond les combinaisons de variables qui font sens ou la sélection de variables, cela pourrait être des pistes d'amélioration.
 
 
 %\section*{Remerciements}
