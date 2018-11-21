@@ -1,3 +1,4 @@
+mais_code_MoinardPierre.zip
 blocks/*
 blocks2/*
 data/*
@@ -14,6 +15,7 @@ rapport/rapport.blg
 rapport/rapport.synctex.gz
 rapport/rapport.toc
 rapport/missfont.log
+rapport/mais_document_MoinardPierre.pdf
 pykernels/*
 features_selection/*
 kernels/tests*
@@ -22,3 +24,4 @@ kernels/pykernels/graph/data*
 *~
 *.pyc
 *.npy
+

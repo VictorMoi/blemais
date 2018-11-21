@@ -87,14 +87,10 @@ x_train,xind2name_train,xname2ind_train = selVar(x_train, xind2name_train, xname
 # 3.3) Scaling train data
 
 scaler_x = preprocessing.StandardScaler().fit(x_train)
-scaler_y = preprocessing.StandardScaler().fit(y_train[:,np.newaxis])
-
 
 x_train_s = copy(x_train)
 x_train_s = scaler_x.transform(x_train_s)
 
-y_train_s = copy(y_train)
-y_train_s = scaler_y.transform(y_train_s[:,np.newaxis])[:,0]
 
 #### 4. Fitting the model
 
@@ -108,7 +104,7 @@ y_train_s = scaler_y.transform(y_train_s[:,np.newaxis])[:,0]
 #reg3.fit(x_train_s,y_train_s)
 
 reg4 = Regression_With_Custom_Kernel(KernelRidge(alpha=0.7), RBF(gamma=0.0025))
-reg4.fit(x_train_s,y_train_s)
+reg4.fit(x_train_s,y_train)
 
 
 #### 5. Processing test data
@@ -159,12 +155,10 @@ xind2name_test == xind2name_train
 #y_test_s1 = reg1.predict(x_test_s)
 #y_test_s2 = reg2.predict(x_test_s)
 #y_test_s3 = reg3.predict(x_test_s)
-y_test_s = reg4.predict(x_test_s)
+y_test = reg4.predict(x_test_s)
 
 #y_test_s = (y_test_s1 + y_test_s2 + y_test_s3 + y_test_s4)/4
 
-y_test = copy(y_test_s)
-y_test = scaler_y.inverse_transform(y_test[:,np.newaxis])[:,0]
 
 #### 7. Export data
 

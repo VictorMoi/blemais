@@ -315,7 +315,7 @@ Au final, les variables mises en entrée des modèles sont les suivantes (sous l
 
 \subsubsection*{Variable de sortie}
 
-La variable réponse du modèle est la variable "yield\_anomaly", centrée réduite. Les modèles sont donc calibrées avec une variable yield\_anomaly centrée réduite. Les prédictions des modèles sont donc dénormalisées avant d'être exportées.
+La variable réponse du modèle est la variable "yield\_anomaly".
 
 
 \subsection*{Nature du modèle}
@@ -327,7 +327,7 @@ Chacun des quatre modèles fournit une prédiction, la valeur retenue est la moy
 
 \subsection*{Estimation a priori du RMSE}
 
-Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 10 RMSE obtenu est de 0,781, avec un écart type de 0,338.
+Nous avons estimé le RMSE de ce modèle à l'aide de cross validation. Le modèle est calibré 10 fois sur 90\% du jeux de données (35 années "train" sur 38). À chaque run, le RMSE est estimé sur les 3 autres années "tests". La moyenne des 100 RMSE obtenu est de 0,845, avec un écart type de 0,3.
 
 \section*{Recherches et développement du modèle}
 
